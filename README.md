@@ -164,6 +164,34 @@ These companies were never fully merged with ParkShark, they became divisions.
 - A category is currently restricted to either *underground building* or *above ground building*. However, there can be more in the future (e.g. *street*, *open space*,...).
 - Prioritization: Must-Have
 
+- instance variables:
+  - parking lot
+    - name
+    - enum Category category 
+    - a max capacity
+    - address (embedded)
+    - ContactPerson (class)
+      - name
+      - mobile phone number
+      - telephone number
+      - email
+      - address (embedded)
+        - street name
+        - house number
+        - postal code 
+          - postal code
+          - label
+    - endpoint: POST on /parking-lots
+      - comments: 
+        - Questions Tim:
+          - Can a contact person have multiple parking lots? 
+          - which fields are (not) allowed to be null?
+    - estimation: 8
+    - test:
+      - 
+        -
+
+
 ### Story PL2: Get all Parking lots
 **As a Manager I want to get an overview of all parking lots.**
 - The returned parking lots should include the id, name, capacity and the contact person's email + telephone (nothing else)
@@ -193,6 +221,28 @@ also include the information of the division.
     - A registration date.
         - A technical tip: In Java, use the new Java Time API. For JPA mapping, check the following link: https://www.baeldung.com/jpa-java-time
 - Prioritization: Must-Have
+
+- instance variables Member
+  - FirstName
+  - LastName
+  - Address (again reuse embedded address)
+  - telephone number
+  - email address
+  - LicensePlate
+    - String plate number
+    - String country
+  - registration date (using Java Time API)
+  
+    - endpoint: POST /members
+    - comments:
+      - Questions Tim:
+        - Validation email address?
+          - Edge cases:
+            - which fields are (not) allowed to be null?
+    - estimation: 5
+    - test:
+      - 
+        -
 
 ### Story ME2: get all Members
 **As a Manager I want to get an overview of all Members**
