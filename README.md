@@ -250,6 +250,10 @@ also include the information of the division.
             - Edge cases:
               - which fields are (not) allowed to be null?
                 - all fields are required
+        - what information about the created member should be returned in the response ?
+          - It can be either all complete object you just created (all the information in the request + id)
+            or just the id
+            (or nothing but /members/{newId} in the location header)
     - estimation: 5
     - test:
       - 
