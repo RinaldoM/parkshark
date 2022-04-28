@@ -6,24 +6,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-
 @RestController
 @RequestMapping(path = "members")
 public class MemberController {
 
+    private final MemberService memberService;
+
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public MemberDto registerMember (@RequestBody RegisterMemberDto registerMemberDto ) {
-        return new MemberDto(
-                "123",
-                "Baby",
-                "Shark",
-                new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
-                "0474555999",
-                "baby.shark@music.bad",
-                new LicensePlate("SHRK123", "Belgium"),
-                registerMemberDto.getRegistrationDate()
-        );
+        return memberService.registerMember(registerMemberDto);
     }
 }
