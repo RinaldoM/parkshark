@@ -9,15 +9,20 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -f digibooky/pom.xml clean install'
+                sh 'mvn clean install -DskipTests'
+            }
+        }
+        stage('Test-Stage') {
+            steps {
+                sh 'mvn -Dmaven.test.failure.ignore=true test'
             }
         }
     }
 
     post {
-            always {
-                publishCoverage adapters: [jacocoAdapter('**/target/site/jacoco/jacoco.xml')]
-                junit '**/target/surefire-reports/*.xml'
-            }
+        always {
+            publishCoverage adapters: [jacocoAdapter('**/target/site/jacoco/jacoco.xml')]
+            junit '**/target/surefire-reports/*.xml'
+        }
     }
 }
