@@ -1,14 +1,29 @@
 package com.switchfully.sharkitects.members;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "POSTALCODE_CITY")
 public class PostalCodeCity {
+
+    @Id
+    @SequenceGenerator(name = "postalcode_city_seq", sequenceName = "postalcode_city_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "postalcode_city_seq")
+    private Long id;
+
+    @Column(name = "ZIPCODE")
     private String zipCode;
+    @Column(name = "CITY")
     private String city;
 
     public PostalCodeCity(String zipCode, String city) {
         this.zipCode = zipCode;
         this.city = city;
+    }
+
+    public PostalCodeCity() {
+
     }
 
     public String getZipCode() {

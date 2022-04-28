@@ -1,18 +1,31 @@
 package com.switchfully.sharkitects.members;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity
+@Table(name = "MEMBER")
 public class Member {
 
-    private final String id;
-    private final String firstName;
-    private final String lastName;
-    private final Address address;
-    private final String phoneNumber;
-    private final String email;
-    private final LicensePlate licensePlate;
-    private final LocalDateTime registrationDate;
+    @Id
+    private String id;
+
+    @Column(name = "FIRSTNAME")
+    private String firstName;
+    @Column(name = "LASTNAME")
+    private String lastName;
+    @Embedded
+    private Address address;
+    @Column(name = "PHONE_NUMBER")
+    private String phoneNumber;
+    @Column(name = "EMAIL")
+    private String email;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_LICENSE_PLATE_ID")
+    private LicensePlate licensePlate;
+    @Column(name = "REGISTRATION_DATE", columnDefinition = "TIMESTAMP")
+    private LocalDateTime registrationDate;
 
     public Member(String firstName, String lastName, Address address, String phoneNumber, String email, LicensePlate licensePlate, LocalDateTime registrationDate) {
         this.id = UUID.randomUUID().toString();
@@ -23,6 +36,10 @@ public class Member {
         this.email = email;
         this.licensePlate = licensePlate;
         this.registrationDate = registrationDate;
+    }
+
+    public Member() {
+
     }
 
     public String getId() {

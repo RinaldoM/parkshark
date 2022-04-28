@@ -6,22 +6,22 @@ import com.switchfully.sharkitects.members.LicensePlate;
 import java.time.LocalDateTime;
 
 public class RegisterMemberDto {
-    private String firstName;
-    private String lastName;
-    private Address address;
-    private String phoneNumber;
-    private String email;
-    private LicensePlate licensePlate;
-    private LocalDateTime registrationDate;
+    private final String firstName;
+    private final String lastName;
+    private final Address address;
+    private final String phoneNumber;
+    private final String email;
+    private final LicensePlate licensePlate;
+    private final LocalDateTime registrationDate;
 
-    public RegisterMemberDto(String firstName, String lastName, Address address, String phoneNumber, String email, LicensePlate licensePlate, LocalDateTime registrationDate) {
+    public RegisterMemberDto(String firstName, String lastName, Address address, String phoneNumber, String email, LicensePlate licensePlate) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.licensePlate = licensePlate;
-        this.registrationDate = registrationDate;
+        this.registrationDate = LocalDateTime.now();
     }
 
     public String getFirstName() {

@@ -5,6 +5,8 @@ import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,9 @@ class MemberIntegrationTest {
     @LocalServerPort
     private int port;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @Test
     void registerMember() {
         //GIVEN
@@ -31,8 +36,7 @@ class MemberIntegrationTest {
                 new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                 "0474555999",
                 "baby.shark@music.bad",
-                new LicensePlate("SHRK123", "Belgium"),
-                LocalDateTime.now()
+                new LicensePlate("SHRK123", "Belgium")
         );
 
         //WHEN
@@ -59,6 +63,7 @@ class MemberIntegrationTest {
         Assertions.assertThat(actual.getEmail()).isEqualTo(expected.getEmail());
         Assertions.assertThat(actual.getLicensePlate()).isEqualTo(expected.getLicensePlate());
         Assertions.assertThat(actual.getRegistrationDate()).isEqualTo(expected.getRegistrationDate());
-
     }
+
+
 }

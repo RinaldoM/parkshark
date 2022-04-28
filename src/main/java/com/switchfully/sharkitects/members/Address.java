@@ -1,16 +1,27 @@
 package com.switchfully.sharkitects.members;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Embeddable
 public class Address {
+
+    @Column(name = "STREET_NAME")
     private String streetName;
+    @Column(name = "STREET_NUMBER")
     private String streetNumber;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_POSTALCODE_CITY_ID")
     private PostalCodeCity postalCodeCity;
 
     public Address(String streetName, String streetNumber, PostalCodeCity postalCodeCity) {
         this.streetName = streetName;
         this.streetNumber = streetNumber;
         this.postalCodeCity = postalCodeCity;
+    }
+
+    public Address() {
+
     }
 
     public String getStreetName() {
