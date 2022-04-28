@@ -185,7 +185,11 @@ These companies were never fully merged with ParkShark, they became divisions.
       - comments: 
         - Questions Tim:
           - Can a contact person have multiple parking lots? 
+            - No one to many relationship
           - which fields are (not) allowed to be null?
+            - not required:
+              - category
+              - address of contact person
     - estimation: 8
     - test:
       - 
@@ -196,6 +200,10 @@ These companies were never fully merged with ParkShark, they became divisions.
 **As a Manager I want to get an overview of all parking lots.**
 - The returned parking lots should include the id, name, capacity and the contact person's email + telephone (nothing else)
 - Prioritization: Must-Have
+endpoint:
+- GET on /parking-lots
+- creating a/multiple DTO('s)
+- estimation: 2
 
 ### Story PL3: Get a Parking lot
 **As a Manager I want to get a single, specified, parking lot.**
@@ -236,9 +244,12 @@ also include the information of the division.
     - endpoint: POST /members
     - comments:
       - Questions Tim:
-        - Validation email address?
-          - Edge cases:
-            - which fields are (not) allowed to be null?
+        - Validation email address? Yes
+        - Can a member have multiple license plates?
+          - Combo name - license plate should be unique
+            - Edge cases:
+              - which fields are (not) allowed to be null?
+                - all fields are required
     - estimation: 5
     - test:
       - 
@@ -248,6 +259,10 @@ also include the information of the division.
 **As a Manager I want to get an overview of all Members**
 - The returned members should contain the id, name, license plate (just the number), telephone number, email-address and registration date (nothing else) 
 - Prioritization: Must-Have
+
+endpoint: GET /members
+- creating DTO's
+- estimation: 2
 
 ### Story ME3: get a Member
 **As a Manager I want to get a single, identified, Member**
@@ -298,6 +313,22 @@ he wants to enter the parking lot. This is what ParkShark calls "starting Parkin
 - A parking allocation should have a start time (when did the member start the allocation?)
 - Prioritization: Must-Have
 
+- instance variables 
+    Allocation object
+  - id
+  - member id
+  - license plate number
+  - parking lot id
+      - endpoint: POST /allocations
+      - comments:
+        - Questions Tim:
+          - Should we implement the US ML1 (bronze, silver, gold) first? ignore it for now
+          
+    
+      - estimation: 8 
+      - test:
+        - edge cases
+
 ### Story PSA2: Stop Allocating a Parking spot
 **As a Member I want to stop allocating a Parking spot so that I can leave the parking lot**
 > When a member wants to leave a parking lot (and thus has just left his parking spot) he has to use the mobile app to
@@ -313,6 +344,20 @@ indicate this. ParkShark calls this "stopping Parking spot allocation".
     as active allocations. Do make this explicit!
         - Thus, every parking allocation should have a status (We'll refer to it as the parking allocation status: active or stopped (for now)). 
 - Prioritization: Must-Have
+
+- instance variables
+
+- id
+- member id
+- parking lot id
+  - endpoint: POST /allocations/id/stop
+  - comments:
+    - Questions Tim:
+      - endpoint: good endpoint?
+
+  - estimation: 5
+  - test:
+    - edge cases
     
 ### Story PSA3: get all parking allocations
 **As a Manager I want to get an overview of all parking allocations**
