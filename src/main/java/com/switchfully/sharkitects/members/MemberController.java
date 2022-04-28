@@ -23,7 +23,7 @@ public class MemberController {
                 "0474555999",
                 "baby.shark@music.bad",
                 new LicensePlate("SHRK123", "Belgium"),
-                LocalDateTime.now()
+                registerMemberDto.getRegistrationDate()
         );
     }
 }
