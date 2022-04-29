@@ -1,5 +1,6 @@
 package com.switchfully.sharkitects.members;
 
+import com.switchfully.sharkitects.members.dtos.DisplayMemberDto;
 import com.switchfully.sharkitects.members.dtos.MemberDto;
 import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
 import com.switchfully.sharkitects.members.exceptions.*;
@@ -71,5 +72,10 @@ public class MemberService {
 
     private boolean isNullEmptyOrBlank(String stringToCheck) {
         return stringToCheck == null || stringToCheck.isEmpty() || stringToCheck.isBlank();
+    }
+
+    public List<DisplayMemberDto> getAllMembers() {
+        logger.info("All members are displayed.");
+        return memberMapper.toDisplayMemberDto(memberRepository.findAll());
     }
 }

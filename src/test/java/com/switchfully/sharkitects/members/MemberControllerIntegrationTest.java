@@ -1,5 +1,6 @@
 package com.switchfully.sharkitects.members;
 
+import com.switchfully.sharkitects.members.dtos.DisplayMemberDto;
 import com.switchfully.sharkitects.members.dtos.MemberDto;
 import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
 import com.switchfully.sharkitects.members.exceptions.*;
@@ -13,10 +14,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
+import static org.assertj.core.util.Lists.newArrayList;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -1257,5 +1262,22 @@ class MemberControllerIntegrationTest {
                         .hasMessage("No license plate issuing country has been provided during member registration.");
             }
         }
+    }
+    @Test
+    @Sql("classpath:add_member.sql")
+    void getAllMembers() {
+        List<DisplayMemberDto> actualMemberList = newArrayList(given()
+                .baseUri("http://localhost")
+                .port(port)
+                .when()
+                .contentType(JSON)
+                .get("/members")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(DisplayMemberDto[].class));
+
+        Assertions.assertThat(actualMemberList).extracting(DisplayMemberDto::getFirstName).contains("Baby");
+        Assertions.assertThat(actualMemberList).extracting(DisplayMemberDto::getEmail).contains("shark@baby.com");
     }
 }

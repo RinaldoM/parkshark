@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class ParkingLotService {
@@ -53,5 +55,10 @@ public class ParkingLotService {
     private boolean checkIfNoPhoneNumberProvided(CreateParkingLotDto createParkingLotDto) {
         return Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getMobilePhoneNumber())
                 && Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getTelephoneNumber());
+    }
+
+    public List<ParkingLotDto> getAllParkingLots() {
+        serviceLogger.info("All parking lots are displayed.");
+        return parkingLotMapper.toParkingLotDto(parkingLotRepository.findAll());
     }
 }

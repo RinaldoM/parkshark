@@ -1,10 +1,14 @@
 package com.switchfully.sharkitects.members;
 
+import com.switchfully.sharkitects.members.dtos.DisplayMemberDto;
 import com.switchfully.sharkitects.members.dtos.MemberDto;
 import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
+import jdk.jfr.ContentType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "members")
@@ -20,5 +24,11 @@ public class MemberController {
     @ResponseStatus(HttpStatus.CREATED)
     public MemberDto registerMember (@RequestBody RegisterMemberDto registerMemberDto ) {
         return memberService.registerMember(registerMemberDto);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<DisplayMemberDto> getAllMembers(){
+        return memberService.getAllMembers();
     }
 }

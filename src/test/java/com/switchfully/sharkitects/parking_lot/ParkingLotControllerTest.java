@@ -5,6 +5,7 @@ import com.switchfully.sharkitects.infrastructure.InvalidNumberException;
 import com.switchfully.sharkitects.members.Address;
 import com.switchfully.sharkitects.members.LicensePlate;
 import com.switchfully.sharkitects.members.PostalCodeCity;
+import com.switchfully.sharkitects.members.dtos.DisplayMemberDto;
 import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
 import com.switchfully.sharkitects.members.exceptions.MissingCityException;
 import com.switchfully.sharkitects.members.exceptions.MissingStreetNameException;
@@ -22,9 +23,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
+import static org.assertj.core.util.Lists.newArrayList;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -1029,9 +1034,25 @@ class ParkingLotControllerTest {
                     .statusCode(HttpStatus.CREATED.value());
 
             //THEN
-            Assertions.assertThat(parkingLotRepository.findAll()).extracting(c -> c.getName()).contains("name");
+            Assertions.assertThat(parkingLotRepository.findAll()).extracting(ParkingLot::getName).contains("name");
         }
+        @Test
+        @Sql("classpath:add_parking_lot.sql")
+        void getAllParkingLots() {
+            List<ParkingLotDto> actualparkingLots = newArrayList(given()
+                    .baseUri("http://localhost")
+                    .port(port)
+                    .when()
+                    .contentType(JSON)
+                    .get("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.OK.value())
+                    .extract().as(ParkingLotDto[].class));
 
+            Assertions.assertThat(actualparkingLots).extracting(ParkingLotDto::getName).contains("Astridplein");
+            Assertions.assertThat(actualparkingLots).extracting(ParkingLotDto::getContactPersonEmail).contains("rinaldo@shark.com");
+        }
 
     }
 }

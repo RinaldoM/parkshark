@@ -21,7 +21,7 @@ create table parking_lot
 (
     ID                    numeric (255),
     NAME                  varchar(255),
-    CATEGORY              varchar(255),
+    CATEGORY              text,
     MAX_CAPACITY          integer,
     STREET_NAME           varchar(255),
     STREET_NUMBER         varchar(255),
