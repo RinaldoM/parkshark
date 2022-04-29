@@ -46,6 +46,7 @@ public class MemberService {
         inputValidation(isNullEmptyOrBlank(registerMemberDto.getEmail()), new MissingEmailException());
         inputValidation(isNullEmptyOrBlank(registerMemberDto.getLicensePlate().getNumber()), new MissingLicensePlateNumberException());
         inputValidation(isNullEmptyOrBlank(registerMemberDto.getLicensePlate().getIssuingCountry()), new MissingLicensePlateIssuingCountryException());
+        inputValidation(!registerMemberDto.getEmail().matches("^(\\S+)@(\\S+)\\.([a-zA-Z]+)$"), new InvalidEmailFormatException());
     }
 
     private void inputValidation (boolean isInvalidInput, RuntimeException exception) {

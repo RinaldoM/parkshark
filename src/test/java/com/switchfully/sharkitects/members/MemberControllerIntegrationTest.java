@@ -872,6 +872,138 @@ class MemberControllerIntegrationTest {
                         .isInstanceOf(MissingEmailException.class)
                         .hasMessage("No email address has been provided during member registration.");
             }
+
+            @Test
+            void givenInvalidEmailAddressFormatNoAtNoDot_whenRegisterMember_thenBadRequestIsReturnedAndExceptionIsThrown() {
+                //GIVEN
+                RegisterMemberDto expected = new RegisterMemberDto(
+                        "Baby",
+                        "Shark",
+                        new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
+                        "0474555999",
+                        "babysharkisadumdum",
+                        new LicensePlate("SHRK123", "Belgium")
+                );
+
+                //WHEN
+                RestAssured
+                        .given()
+                        .body(expected)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .post("/members")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value());
+
+                Throwable thrown = Assertions.catchThrowable(() -> memberService.registerMember(expected));
+
+                //THEN
+                Assertions.assertThat(thrown)
+                        .isInstanceOf(InvalidEmailFormatException.class)
+                        .hasMessage("An invalid email address format has been provided during member registration.");
+            }
+
+            @Test
+            void givenInvalidEmailAddressFormatNoAt_whenRegisterMember_thenBadRequestIsReturnedAndExceptionIsThrown() {
+                //GIVEN
+                RegisterMemberDto expected = new RegisterMemberDto(
+                        "Baby",
+                        "Shark",
+                        new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
+                        "0474555999",
+                        "babysharkisa.dumdum",
+                        new LicensePlate("SHRK123", "Belgium")
+                );
+
+                //WHEN
+                RestAssured
+                        .given()
+                        .body(expected)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .post("/members")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value());
+
+                Throwable thrown = Assertions.catchThrowable(() -> memberService.registerMember(expected));
+
+                //THEN
+                Assertions.assertThat(thrown)
+                        .isInstanceOf(InvalidEmailFormatException.class)
+                        .hasMessage("An invalid email address format has been provided during member registration.");
+            }
+
+            @Test
+            void givenInvalidEmailAddressFormatNoDot_whenRegisterMember_thenBadRequestIsReturnedAndExceptionIsThrown() {
+                //GIVEN
+                RegisterMemberDto expected = new RegisterMemberDto(
+                        "Baby",
+                        "Shark",
+                        new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
+                        "0474555999",
+                        "babysharkisa@dumdum",
+                        new LicensePlate("SHRK123", "Belgium")
+                );
+
+                //WHEN
+                RestAssured
+                        .given()
+                        .body(expected)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .post("/members")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value());
+
+                Throwable thrown = Assertions.catchThrowable(() -> memberService.registerMember(expected));
+
+                //THEN
+                Assertions.assertThat(thrown)
+                        .isInstanceOf(InvalidEmailFormatException.class)
+                        .hasMessage("An invalid email address format has been provided during member registration.");
+            }
+
+            @Test
+            void givenInvalidEmailAddressFormatSpecialCharacter_whenRegisterMember_thenBadRequestIsReturnedAndExceptionIsThrown() {
+                //GIVEN
+                RegisterMemberDto expected = new RegisterMemberDto(
+                        "Baby",
+                        "Shark",
+                        new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
+                        "0474555999",
+                        "babysharkisa@dum.d_um",
+                        new LicensePlate("SHRK123", "Belgium")
+                );
+
+                //WHEN
+                RestAssured
+                        .given()
+                        .body(expected)
+                        .accept(JSON)
+                        .contentType(JSON)
+                        .when()
+                        .port(port)
+                        .post("/members")
+                        .then()
+                        .assertThat()
+                        .statusCode(HttpStatus.BAD_REQUEST.value());
+
+                Throwable thrown = Assertions.catchThrowable(() -> memberService.registerMember(expected));
+
+                //THEN
+                Assertions.assertThat(thrown)
+                        .isInstanceOf(InvalidEmailFormatException.class)
+                        .hasMessage("An invalid email address format has been provided during member registration.");
+            }
         }
         @Nested
         @DisplayName("License plate validation tests")
