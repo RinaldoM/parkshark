@@ -2,6 +2,7 @@ package com.switchfully.sharkitects.parking_lot;
 
 import com.switchfully.sharkitects.infrastructure.EmptyInputException;
 import com.switchfully.sharkitects.infrastructure.Infrastructure;
+import com.switchfully.sharkitects.infrastructure.InvalidNumberException;
 import com.switchfully.sharkitects.parking_lot.dto.CreateParkingLotDto;
 import com.switchfully.sharkitects.parking_lot.dto.ParkingLotMapper;
 import org.slf4j.Logger;
@@ -32,17 +33,17 @@ public class ParkingLotService {
     }
 
     private void checkEachInputField(CreateParkingLotDto createParkingLotDto) {
-        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getName()), new EmptyInputException("Parking name"));
-        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getMaxCapacity()), new EmptyInputException("Maximum capacity"));
-        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getAddress().getStreetName()), new EmptyInputException("Street name"));
-        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getAddress().getStreetNumber()), new EmptyInputException("Street number"));
-        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getAddress().getPostalCodeCity().getZipCode()), new EmptyInputException("Zip code"));
-        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getAddress().getPostalCodeCity().getCity()), new EmptyInputException("City"));
-        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getPricePerHour()), new EmptyInputException("Price per hour"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getName()), new EmptyInputException("parking name"));
+        Infrastructure.inputValidation(Infrastructure.isLessOrEqualTo0(createParkingLotDto.getMaxCapacity()), new InvalidNumberException("max capacity"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getAddress().getStreetName()), new EmptyInputException("street name"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getAddress().getStreetNumber()), new EmptyInputException("street number"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getAddress().getPostalCodeCity().getZipCode()), new EmptyInputException("zip code"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getAddress().getPostalCodeCity().getCity()), new EmptyInputException("city"));
+        Infrastructure.inputValidation(Infrastructure.isLessOrEqualTo0(createParkingLotDto.getPricePerHour()), new InvalidNumberException("price per hour"));
         // Checks for contact person:
-        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getFirstName()), new EmptyInputException("First name"));
-        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getLastName()), new EmptyInputException("Last name"));
-        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getEmail()), new EmptyInputException("Email address"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getFirstName()), new EmptyInputException("first name"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getLastName()), new EmptyInputException("last name"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getEmail()), new EmptyInputException("email address"));
 
         Infrastructure.inputValidation(checkIfNoPhoneNumberProvided(createParkingLotDto), new EmptyInputException("mobile phone number or telephone number"));
 

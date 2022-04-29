@@ -18,11 +18,11 @@ public class Infrastructure {
         return stringToCheck == null || stringToCheck.isEmpty() || stringToCheck.isBlank();
     }
 
-    public static boolean isNullEmptyOrBlank(int intToCheck) {
+    public static boolean isLessOrEqualTo0(int intToCheck) {
         return intToCheck <= 0;
     }
 
-    public static boolean isNullEmptyOrBlank(double doubleToCheck) {
+    public static boolean isLessOrEqualTo0(double doubleToCheck) {
         return doubleToCheck <= 0;
     }
 }

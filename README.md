@@ -190,6 +190,7 @@ These companies were never fully merged with ParkShark, they became divisions.
             - not required:
               - category
               - address of contact person
+              - name needs to be unique
     - estimation: 8
     - test:
       - 
