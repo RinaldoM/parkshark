@@ -21,7 +21,6 @@ public class CreateParkingLotDto {
         this.pricePerHour = pricePerHour;
     }
 
-
     public String getName() {
         return name;
     }
@@ -45,4 +44,5 @@ public class CreateParkingLotDto {
     public int getPricePerHour() {
         return pricePerHour;
     }
+
 }

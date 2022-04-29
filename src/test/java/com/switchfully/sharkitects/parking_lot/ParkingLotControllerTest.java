@@ -23,8 +23,8 @@ class ParkingLotControllerTest {
     @LocalServerPort
     private int port;
 
-//    @Autowired
-//    private ParkingLotRepository parkingLotRepository;
+    @Autowired
+    private ParkingLotRepository parkingLotRepository;
 
     @Autowired
     private ParkingLotMapper parkingLotMapper;
@@ -32,7 +32,7 @@ class ParkingLotControllerTest {
     @Test
     void givenParkingLot_whenParkingLotIsCreated_returnParkingLot() {
 
-        ParkingLot parkingLot = new ParkingLot("name", Category.ABOVE_GROUND_BUILDING, 10,
+        CreateParkingDto parkingLot = new CreateParkingDto("name", Category.ABOVE_GROUND_BUILDING, 10,
                 new Address("Stefaniestraat", "1B",
                         new PostalCodeCity("3600", "Genk")),
                 new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
@@ -40,7 +40,7 @@ class ParkingLotControllerTest {
                                 new PostalCodeCity("3600", "Genk"))),
                 10);
 
-        CreateParkingLotDto actual = RestAssured
+     RestAssured
                 .given()
                 .port(port)
                 .body(parkingLot)
@@ -50,13 +50,10 @@ class ParkingLotControllerTest {
                 .post("/parking-lots")
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract()
-                .as(CreateParkingLotDto.class);
+                .statusCode(HttpStatus.CREATED.value());
 
-        Assertions.assertThat(parkingLotMapper.toParkingLot(actual).getId()).isNotNull();
 
-        // Assertions.assertThat(parkingLotRepository.findAll()).extracting(c -> c.getName()).contains("test");
+         Assertions.assertThat(parkingLotRepository.findAll()).extracting(c -> c.getName()).contains("name");
 
     }
 }

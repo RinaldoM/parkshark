@@ -1,13 +1,12 @@
 package com.switchfully.sharkitects.parking_lot.dto;
 
-import com.switchfully.sharkitects.parking_lot.ParkingLot;
-import com.switchfully.sharkitects.parking_lot.dto.CreateParkingLotDto;
+import com.switchfully.sharkitects.parking_lot.CreateParkingDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ParkingLotMapper {
-    public ParkingLot toParkingLot(CreateParkingLotDto createParkingLotDto){
-        return new ParkingLot(
+    public CreateParkingDto toParkingLot(CreateParkingLotDto createParkingLotDto){
+        return new CreateParkingDto(
                 createParkingLotDto.getName(),
                 createParkingLotDto.getCategory(),
                 createParkingLotDto.getMaxCapacity(),
