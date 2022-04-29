@@ -3,27 +3,31 @@ package com.switchfully.sharkitects.parking_lot;
 import com.switchfully.sharkitects.members.Address;
 
 import javax.persistence.*;
-import java.util.UUID;
 
-//@Entity
-//@Table (name = "parking_lot")
-public class ParkingLot {
+@Entity
+@Table (name = "parking_lot")
+public class CreateParkingDto {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "parking_lot_seq")
-//    @SequenceGenerator(name = "parking_lot_seq", sequenceName = "parking_lot_seq", allocationSize = 1)
-    private String id;
-//    @Column (name = "NAME")
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "parking_lot_seq")
+    @SequenceGenerator(name = "parking_lot_seq", sequenceName = "parking_lot_seq", allocationSize = 1)
+    private Long id;
+    @Column (name = "NAME")
     private String name;
+    @Enumerated
+    @Column (name = "CATEGORY")
     private Category category;
+    @Column (name = "MAX_CAPACITY")
     private int maxCapacity;
+    @Embedded
     private Address address;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="FK_CONTACT_PERSON_ID")
     private ContactPerson contactPerson;
-    private int pricePerHour;
+    @Column (name = "PRICE_PER_HOUR")
+    private double pricePerHour;
 
-
-    public ParkingLot(String name, Category category, int maxCapacity, Address address, ContactPerson contactPerson, int pricePerHour) {
-        this.id = UUID.randomUUID().toString();
+    public CreateParkingDto(String name, Category category, int maxCapacity, Address address, ContactPerson contactPerson, double pricePerHour) {
         this.name = name;
         this.category = category;
         this.maxCapacity = maxCapacity;
@@ -32,7 +36,11 @@ public class ParkingLot {
         this.pricePerHour = pricePerHour;
     }
 
-    public String getId() {
+    public CreateParkingDto() {
+
+    }
+
+    public Long getId() {
         return id;
     }
 
@@ -56,7 +64,7 @@ public class ParkingLot {
         return contactPerson;
     }
 
-    public int getPricePerHour() {
+    public double getPricePerHour() {
         return pricePerHour;
     }
 }
