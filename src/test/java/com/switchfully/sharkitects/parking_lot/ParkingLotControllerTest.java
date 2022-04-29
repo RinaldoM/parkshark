@@ -53,7 +53,7 @@ class ParkingLotControllerTest {
                                 new PostalCodeCity("3600", "Genk"))),
                 10);
 
-     RestAssured
+        RestAssured
                 .given()
                 .port(port)
                 .body(parkingLot)
@@ -66,24 +66,24 @@ class ParkingLotControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
 
 
-         Assertions.assertThat(parkingLotRepository.findAll()).extracting(c -> c.getName()).contains("name");
+        Assertions.assertThat(parkingLotRepository.findAll()).extracting(c -> c.getName()).contains("name");
 
     }
 
     @Nested
-    @DisplayName("Name validation tests")
-    class NameValidationTest {
+    @DisplayName("Parking Name validation tests")
+    class ParkingNameValidationTest {
         @Test
         void givenNullName_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
             //GIVEN
             CreateParkingLotDto expected = new CreateParkingLotDto
                     (null, Category.ABOVE_GROUND_BUILDING, 10,
-                    new Address("Stefaniestraat", "1B",
-                            new PostalCodeCity("3600", "Genk")),
-                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
                             new Address("Stefaniestraat", "1B",
-                                    new PostalCodeCity("3600", "Genk"))),
-                    10);
+                                    new PostalCodeCity("3600", "Genk")),
+                            new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                                    new Address("Stefaniestraat", "1B",
+                                            new PostalCodeCity("3600", "Genk"))),
+                            10);
 
             //WHEN
             RestAssured
@@ -173,11 +173,45 @@ class ParkingLotControllerTest {
 
     @Nested
     @DisplayName("Capacity validation tests")
-    class CapacityValidationTest{
+    class CapacityValidationTest {
         @Test
         void givenNegativeCapacity_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
             //GIVEN
             CreateParkingLotDto expected = new CreateParkingLotDto("name", Category.ABOVE_GROUND_BUILDING, -5,
+                    new Address("Stefaniestraat", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+
+            RestAssured
+                    .given()
+                    .port(port)
+                    .body(expected)
+                    .contentType(JSON)
+                    .when()
+                    .accept(JSON)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InvalidNumberException.class)
+                    .hasMessage("Invalid value entered for max capacity");
+        }
+
+
+        @Test
+        void givenCapacityEquals0_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("name", Category.ABOVE_GROUND_BUILDING, 0,
                     new Address("Stefaniestraat", "1B",
                             new PostalCodeCity("3600", "Genk")),
                     new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
@@ -664,5 +698,340 @@ class ParkingLotControllerTest {
                     .isInstanceOf(InvalidNumberException.class)
                     .hasMessage("Invalid value entered for price per hour");
         }
+    }
+
+    @Nested
+    @DisplayName("Contact Person Name validation tests")
+    class ContactPersonNameValidationTest {
+        @Test
+        void givenNullFirstName_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto
+                    ("baby", Category.ABOVE_GROUND_BUILDING, 10,
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk")),
+                            new ContactPerson(null, "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                                    new Address("Stefaniestraat", "1B",
+                                            new PostalCodeCity("3600", "Genk"))),
+                            10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty first name");
+        }
+
+        @Test
+        void givenEmptyFirstName_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("Baby", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("Stefaniestraat", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty first name");
+        }
+
+        @Test
+        void givenBlankFirstName_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("Baby", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("Stefaniestraat", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson(" ", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty first name");
+        }
+
+        @Test
+        void givenNullLastName_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto
+                    ("baby", Category.ABOVE_GROUND_BUILDING, 10,
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk")),
+                            new ContactPerson("baby", null, "04893543135", "60564035", "stefanie@mail.com",
+                                    new Address("Stefaniestraat", "1B",
+                                            new PostalCodeCity("3600", "Genk"))),
+                            10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty last name");
+        }
+
+        @Test
+        void givenEmptyLastName_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("Baby", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("Stefaniestraat", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("baby", "", "04893543135", "60564035", "stefanie@mail.com",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty last name");
+        }
+
+        @Test
+        void givenBlankLastName_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("Baby", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("Stefaniestraat", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("baby", " ", "04893543135", "60564035", "stefanie@mail.com",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty last name");
+        }
+    }
+
+    @Nested
+    @DisplayName("Contact Person Phone number validation tests")
+    class ContactPersonPhoneNumberValidationTest {
+        @Test
+        void givenMobilePhoneNumberAndPhoneNumberAreNull_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto
+                    ("baby", Category.ABOVE_GROUND_BUILDING, 10,
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk")),
+                            new ContactPerson("baby", "Vloemans", null, null, "stefanie@mail.com",
+                                    new Address("Stefaniestraat", "1B",
+                                            new PostalCodeCity("3600", "Genk"))),
+                            10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty mobile phone number and telephone number");
+        }
+
+        @Test
+        void givenMobilePhoneNumberAndPhoneNumberAreEmpty_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto
+                    ("baby", Category.ABOVE_GROUND_BUILDING, 10,
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk")),
+                            new ContactPerson("baby", "Vloemans", "", "", "stefanie@mail.com",
+                                    new Address("Stefaniestraat", "1B",
+                                            new PostalCodeCity("3600", "Genk"))),
+                            10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty mobile phone number and telephone number");
+        }
+
+        @Test
+        void givenMobilePhoneNumberAndPhoneNumberAreBlank_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto
+                    ("baby", Category.ABOVE_GROUND_BUILDING, 10,
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk")),
+                            new ContactPerson("baby", "Vloemans", " ", " ", "stefanie@mail.com",
+                                    new Address("Stefaniestraat", "1B",
+                                            new PostalCodeCity("3600", "Genk"))),
+                            10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty mobile phone number and telephone number");
+        }
+    }
+
+
+    @Nested
+    @DisplayName("Contact Person Address validation tests")
+    class ContactPersonAddressValidationTest {
+        @Test
+        void givenContactPersonStreetNameAndStreetNumberAreNull_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            ParkingLot parkingLot = new ParkingLot("name", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("Stefaniestraat", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                            new Address(null, null,
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+            //WHEN
+            RestAssured
+                    .given()
+                    .port(port)
+                    .body(parkingLot)
+                    .contentType(JSON)
+                    .when()
+                    .accept(JSON)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.CREATED.value());
+
+            //THEN
+            Assertions.assertThat(parkingLotRepository.findAll()).extracting(c -> c.getName()).contains("name");
+        }
+
+
     }
 }
