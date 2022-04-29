@@ -14,6 +14,8 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.time.LocalDateTime;
+
 import static io.restassured.http.ContentType.JSON;
 
 
@@ -23,6 +25,9 @@ class MemberControllerIntegrationTest {
 
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
     private MemberService memberService;
@@ -65,6 +70,52 @@ class MemberControllerIntegrationTest {
         Assertions.assertThat(actual.getRegistrationDate()).isEqualTo(expected.getRegistrationDate());
     }
 
+    @Test
+    void givenAnAlreadyExistingNameAndLicensePlateCombination_whenRegisterMember_thenBadRequestIsReturnedAndExceptionIsThrown() {
+        //GIVEN
+        Member existingMember = new Member(
+                "Baby",
+                "Shark",
+                new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
+                "0474555999",
+                "baby.shark@music.bad",
+                new LicensePlate("SHRK123", "Belgium"),
+                LocalDateTime.now()
+        );
+        memberRepository.save(existingMember);
+
+        RegisterMemberDto expected = new RegisterMemberDto(
+                "Baby",
+                "Shark",
+                new Address("other place", "8", new PostalCodeCity("5000", "Namur")),
+                "01234",
+                "some@mail.com",
+                new LicensePlate("SHRK123", "Belgium")
+        );
+
+
+        //WHEN
+
+        RestAssured
+                .given()
+                .body(expected)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/members")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+
+        Throwable thrown = Assertions.catchThrowable(() -> memberService.registerMember(expected));
+
+        //THEN
+        Assertions.assertThat(thrown)
+                .isInstanceOf(NameLicensePlateCombinationExistsException.class)
+                .hasMessage("A member with the same name and the same license plate already exists.");
+
+    }
 
     @Nested
     @DisplayName("Input validation tests")

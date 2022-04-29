@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 public class MemberService {
@@ -35,6 +38,13 @@ public class MemberService {
 
     }
 
+    private boolean memberWithSameNameAndPlateExists(RegisterMemberDto registerMemberDto) {
+        List<Member> membersWithSameNamePlate = memberRepository.findAllByFirstNameAndLastName(registerMemberDto.getFirstName(), registerMemberDto.getLastName()).stream()
+                .filter(member -> member.getLicensePlate().equals(registerMemberDto.getLicensePlate()))
+                .toList();
+        return membersWithSameNamePlate.size() > 0;
+    }
+
     private void checkEachInputField(RegisterMemberDto registerMemberDto) {
         inputValidation(isNullEmptyOrBlank(registerMemberDto.getFirstName()), new MissingFirstNameException());
         inputValidation(isNullEmptyOrBlank(registerMemberDto.getLastName()), new MissingLastNameException());
@@ -46,10 +56,13 @@ public class MemberService {
         inputValidation(isNullEmptyOrBlank(registerMemberDto.getEmail()), new MissingEmailException());
         inputValidation(isNullEmptyOrBlank(registerMemberDto.getLicensePlate().getNumber()), new MissingLicensePlateNumberException());
         inputValidation(isNullEmptyOrBlank(registerMemberDto.getLicensePlate().getIssuingCountry()), new MissingLicensePlateIssuingCountryException());
+
         inputValidation(!registerMemberDto.getEmail().matches("^(\\S+)@(\\S+)\\.([a-zA-Z]+)$"), new InvalidEmailFormatException());
+
+        inputValidation(memberWithSameNameAndPlateExists(registerMemberDto), new NameLicensePlateCombinationExistsException());
     }
 
-    private void inputValidation (boolean isInvalidInput, RuntimeException exception) {
+    private void inputValidation(boolean isInvalidInput, RuntimeException exception) {
         if (isInvalidInput) {
             logger.error(exception.getMessage());
             throw exception;

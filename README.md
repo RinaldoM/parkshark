@@ -246,7 +246,7 @@ also include the information of the division.
       - Questions Tim:
         - Validation email address? Yes
         - Can a member have multiple license plates?
-          - Combo name - license plate should be unique
+          - Combo name - license plate should be unique -> ex: car leasing - the same license plate could have many owners over time
             - Edge cases:
               - which fields are (not) allowed to be null?
                 - all fields are required
