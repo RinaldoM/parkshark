@@ -27,7 +27,7 @@ public class MemberService {
     }
 
     public MemberDto registerMember(RegisterMemberDto registerMemberDto) {
-        logger.info("Registering a new member");
+        logger.info("Attempting to register a new member");
 
         checkEachInputField(registerMemberDto);
 

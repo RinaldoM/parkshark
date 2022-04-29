@@ -10,7 +10,7 @@ public class Address {
     private String streetName;
     @Column(name = "STREET_NUMBER")
     private String streetNumber;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL) // should be many to one
     @JoinColumn(name = "FK_POSTALCODE_CITY_ID")
     private PostalCodeCity postalCodeCity;
 
