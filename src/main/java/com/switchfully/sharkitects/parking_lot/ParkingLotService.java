@@ -9,15 +9,15 @@ public class ParkingLotService {
 
 
     private final ParkingLotMapper parkingLotMapper;
-    private final ParkingLotRepository parkingLotRepository;
+//    private final ParkingLotRepository parkingLotRepository;
 
-    public ParkingLotService(ParkingLotMapper parkingLotMapper, ParkingLotRepository parkingLotRepository) {
+    public ParkingLotService(ParkingLotMapper parkingLotMapper ) {
         this.parkingLotMapper = parkingLotMapper;
-        this.parkingLotRepository = parkingLotRepository;
+//        this.parkingLotRepository = parkingLotRepository;
     }
 
     public CreateParkingLotDto createParkingLot(CreateParkingLotDto createParkingLotDto) {
-        parkingLotRepository.save(parkingLotMapper.toParkingLot(createParkingLotDto));
+//        parkingLotRepository.save(parkingLotMapper.toParkingLot(createParkingLotDto));
         return createParkingLotDto;
     }
 }
