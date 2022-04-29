@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table (name = "parking_lot")
-public class CreateParkingDto {
+public class ParkingLot {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "parking_lot_seq")
@@ -27,7 +27,7 @@ public class CreateParkingDto {
     @Column (name = "PRICE_PER_HOUR")
     private double pricePerHour;
 
-    public CreateParkingDto(String name, Category category, int maxCapacity, Address address, ContactPerson contactPerson, double pricePerHour) {
+    public ParkingLot(String name, Category category, int maxCapacity, Address address, ContactPerson contactPerson, double pricePerHour) {
         this.name = name;
         this.category = category;
         this.maxCapacity = maxCapacity;
@@ -36,7 +36,7 @@ public class CreateParkingDto {
         this.pricePerHour = pricePerHour;
     }
 
-    public CreateParkingDto() {
+    public ParkingLot() {
 
     }
 

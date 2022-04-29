@@ -2,7 +2,6 @@ package com.switchfully.sharkitects.parking_lot;
 
 import com.switchfully.sharkitects.members.Address;
 import com.switchfully.sharkitects.members.PostalCodeCity;
-import com.switchfully.sharkitects.parking_lot.dto.CreateParkingLotDto;
 import com.switchfully.sharkitects.parking_lot.dto.ParkingLotMapper;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
@@ -32,7 +31,7 @@ class ParkingLotControllerTest {
     @Test
     void givenParkingLot_whenParkingLotIsCreated_returnParkingLot() {
 
-        CreateParkingDto parkingLot = new CreateParkingDto("name", Category.ABOVE_GROUND_BUILDING, 10,
+        ParkingLot parkingLot = new ParkingLot("name", Category.ABOVE_GROUND_BUILDING, 10,
                 new Address("Stefaniestraat", "1B",
                         new PostalCodeCity("3600", "Genk")),
                 new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",

@@ -3,7 +3,6 @@ package com.switchfully.sharkitects.members;
 import javax.persistence.*;
 import java.util.Objects;
 
-@Embeddable
 public class Address {
 
     @Column(name = "STREET_NAME")

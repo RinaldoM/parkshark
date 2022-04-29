@@ -8,12 +8,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path="/parking-lots")
 public class ParkingLotController {
-//
-//    private ParkingLotRepository parkingLotRepository;
-
-//    public ParkingLotController(ParkingLotRepository parkingLotRepository) {
-//        this.parkingLotRepository = parkingLotRepository;
-//    }
 
     private final ParkingLotService parkingLotService;
 
@@ -21,7 +15,7 @@ public class ParkingLotController {
         this.parkingLotService = parkingLotService;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CreateParkingLotDto createParkingLot(@RequestBody CreateParkingLotDto createParkingLotDto) {
         return parkingLotService.createParkingLot(createParkingLotDto);
