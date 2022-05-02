@@ -1,10 +1,14 @@
 package com.switchfully.sharkitects.parking_lot;
 
-import com.switchfully.sharkitects.infrastructure.EmptyInputException;
-import com.switchfully.sharkitects.infrastructure.InvalidNumberException;
+import com.switchfully.sharkitects.infrastructure.exceptions.EmptyInputException;
+import com.switchfully.sharkitects.infrastructure.exceptions.InvalidEmailFormatException;
+import com.switchfully.sharkitects.infrastructure.exceptions.InvalidNumberException;
 import com.switchfully.sharkitects.members.Address;
 import com.switchfully.sharkitects.members.PostalCodeCity;
 import com.switchfully.sharkitects.parking_lot.dto.CreateParkingLotDto;
+import com.switchfully.sharkitects.parking_lot.dto.ParkingLotDto;
+import com.switchfully.sharkitects.parking_lot.exceptions.ParkingLotAlreadyExistsException;
+import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -33,11 +37,14 @@ class ParkingLotControllerTest {
     private ParkingLotRepository parkingLotRepository;
 
     @Autowired
+    private ParkingLotMapper parkingLotMapper;
+
+    @Autowired
     private ParkingLotService parkingLotService;
 
     @Test
     void givenParkingLot_whenParkingLotIsCreated_returnParkingLot() {
-
+        //GIVEN
         ParkingLot parkingLot = new ParkingLot("name", Category.ABOVE_GROUND_BUILDING, 10,
                 new Address("Stefaniestraat", "1B",
                         new PostalCodeCity("3600", "Genk")),
@@ -46,7 +53,9 @@ class ParkingLotControllerTest {
                                 new PostalCodeCity("3600", "Genk"))),
                 10);
 
-        given()
+        //WHEN
+         RestAssured
+                .given()
                 .port(port)
                 .body(parkingLot)
                 .contentType(JSON)
@@ -57,9 +66,68 @@ class ParkingLotControllerTest {
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value());
 
-
+        //THEN
         Assertions.assertThat(parkingLotRepository.findAll()).extracting(c -> c.getName()).contains("name");
+    }
 
+    @Test
+    @Sql("classpath:add_parking_lot.sql")
+    void getAllParkingLots() {
+        List<ParkingLotDto> actualparkingLots = newArrayList(given()
+                .baseUri("http://localhost")
+                .port(port)
+                .when()
+                .contentType(JSON)
+                .get("/parking-lots")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract().as(ParkingLotDto[].class));
+
+        Assertions.assertThat(actualparkingLots).extracting(ParkingLotDto::getName).contains("Astridplein");
+        Assertions.assertThat(actualparkingLots).extracting(ParkingLotDto::getContactPersonEmail).contains("rinaldo@shark.com");
+    }
+
+    @Test
+    void givenAnAlreadyExistingName_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+        //GIVEN
+        ParkingLot existingParkingLot = new ParkingLot("alreadyExistingName", Category.ABOVE_GROUND_BUILDING, 10,
+                new Address("Stefaniestraat", "1B",
+                        new PostalCodeCity("3600", "Genk")),
+                new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                        new Address("Stefaniestraat", "1B",
+                                new PostalCodeCity("3600", "Genk"))),
+                10);
+        parkingLotRepository.save(existingParkingLot);
+
+        CreateParkingLotDto expected = new CreateParkingLotDto
+                ("alreadyExistingName", Category.ABOVE_GROUND_BUILDING, 10,
+                        new Address("Stefaniestraat", "1B",
+                                new PostalCodeCity("3600", "Genk")),
+                        new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                                new Address("Stefaniestraat", "1B",
+                                        new PostalCodeCity("3600", "Genk"))),
+                        10);
+
+        //WHEN
+        RestAssured
+                .given()
+                .body(expected)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/parking-lots")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+
+        Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+        //THEN
+        Assertions.assertThat(thrown)
+                .isInstanceOf(ParkingLotAlreadyExistsException.class)
+                .hasMessage("A parking lot with the same name already exists");
     }
 
     @Nested
@@ -78,7 +146,8 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -109,7 +178,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -140,7 +210,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -176,7 +247,8 @@ class ParkingLotControllerTest {
 
             //WHEN
 
-            given()
+            RestAssured
+                    .given()
                     .port(port)
                     .body(expected)
                     .contentType(JSON)
@@ -209,7 +281,8 @@ class ParkingLotControllerTest {
 
             //WHEN
 
-            given()
+            RestAssured
+                    .given()
                     .port(port)
                     .body(expected)
                     .contentType(JSON)
@@ -244,7 +317,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -275,7 +349,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -306,7 +381,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -337,7 +413,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -368,7 +445,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -399,7 +477,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -430,7 +509,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -461,7 +541,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -492,7 +573,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -523,7 +605,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -554,7 +637,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -585,7 +669,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -606,6 +691,234 @@ class ParkingLotControllerTest {
     }
 
     @Nested
+    @DisplayName("Email validation tests")
+    class EmailValidationTest {
+        @Test
+        void givenNullEmail_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("name", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("oceans", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", null,
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty email address");
+        }
+
+        @Test
+        void givenEmptyEmail_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("name", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("oceans", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty email address");
+        }
+
+        @Test
+        void givenBlankEmail_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("name", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("oceans", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", " ",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(EmptyInputException.class)
+                    .hasMessage("Empty email address");
+        }
+
+        @Test
+        void givenInvalidEmailAddressFormatNoAtNoDot_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("name", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("oceans", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "babysharkisadumdum",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InvalidEmailFormatException.class)
+                    .hasMessage("An invalid email address format has been provided");
+        }
+
+        @Test
+        void givenInvalidEmailAddressFormatNoAt_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("name", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("oceans", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "babysharkisa.dumdum",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InvalidEmailFormatException.class)
+                    .hasMessage("An invalid email address format has been provided");
+        }
+
+        @Test
+        void givenInvalidEmailAddressFormatNoDot_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("name", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("oceans", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "babysharkisa@dumdum",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InvalidEmailFormatException.class)
+                    .hasMessage("An invalid email address format has been provided");
+        }
+
+        @Test
+        void givenInvalidEmailAddressFormatSpecialCharacter_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            CreateParkingLotDto expected = new CreateParkingLotDto("name", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("oceans", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "baby@sharkisa.dum_dum",
+                            new Address("Stefaniestraat", "1B",
+                                    new PostalCodeCity("3600", "Genk"))),
+                    10);
+
+            //WHEN
+            RestAssured
+                    .given()
+                    .body(expected)
+                    .accept(JSON)
+                    .contentType(JSON)
+                    .when()
+                    .port(port)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> parkingLotService.createParkingLot(expected));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InvalidEmailFormatException.class)
+                    .hasMessage("An invalid email address format has been provided");
+        }
+    }
+
+    @Nested
     @DisplayName("Price per hour validation tests")
     class PricePerHourValidationTest {
         @Test
@@ -621,7 +934,8 @@ class ParkingLotControllerTest {
 
             //WHEN
 
-            given()
+            RestAssured
+                    .given()
                     .port(port)
                     .body(expected)
                     .contentType(JSON)
@@ -653,7 +967,8 @@ class ParkingLotControllerTest {
 
             //WHEN
 
-            given()
+            RestAssured
+                    .given()
                     .port(port)
                     .body(expected)
                     .contentType(JSON)
@@ -689,7 +1004,8 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -720,7 +1036,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -751,7 +1068,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -783,7 +1101,8 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -814,7 +1133,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -845,7 +1165,8 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -881,7 +1202,8 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -913,7 +1235,8 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -945,7 +1268,8 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            given()
+            RestAssured
+                    .given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -970,17 +1294,70 @@ class ParkingLotControllerTest {
     @DisplayName("Contact Person Address validation tests")
     class ContactPersonAddressValidationTest {
         @Test
-        void givenContactPersonStreetNameAndStreetNumberAreNull_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+        void givenContactPersonAddressIsNull_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
             //GIVEN
             ParkingLot parkingLot = new ParkingLot("name", Category.ABOVE_GROUND_BUILDING, 10,
                     new Address("Stefaniestraat", "1B",
                             new PostalCodeCity("3600", "Genk")),
                     new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
-                            new Address(null, null,
-                                    new PostalCodeCity("3600", "Genk"))),
+                            null),
                     10);
             //WHEN
-            given()
+            RestAssured
+                    .given()
+                    .port(port)
+                    .body(parkingLot)
+                    .contentType(JSON)
+                    .when()
+                    .accept(JSON)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.CREATED.value());
+
+            //THEN
+            Assertions.assertThat(parkingLotRepository.findAll()).extracting(c -> c.getName()).contains("name");
+        }
+
+        @Test
+        void givenContactPersonStreetNameStreetNumberZipCodeAndCityAreEmpty_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            ParkingLot parkingLot = new ParkingLot("name", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("Stefaniestraat", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                            new Address("", "",
+                                    new PostalCodeCity("", ""))),
+                    10);
+            //WHEN
+            RestAssured
+                    .given()
+                    .port(port)
+                    .body(parkingLot)
+                    .contentType(JSON)
+                    .when()
+                    .accept(JSON)
+                    .post("/parking-lots")
+                    .then()
+                    .assertThat()
+                    .statusCode(HttpStatus.CREATED.value());
+
+            //THEN
+            Assertions.assertThat(parkingLotRepository.findAll()).extracting(c -> c.getName()).contains("name");
+        }
+
+        void givenContactPersonStreetNameStreetNumberZipCodeAndCityAreBlank_whenCreateParkingLot_thenBadRequestIsReturnedAndExceptionIsThrown() {
+            //GIVEN
+            ParkingLot parkingLot = new ParkingLot("name", Category.ABOVE_GROUND_BUILDING, 10,
+                    new Address("Stefaniestraat", "1B",
+                            new PostalCodeCity("3600", "Genk")),
+                    new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                            new Address(" ", " ",
+                                    new PostalCodeCity(" ", ""))),
+                    10);
+            //WHEN
+            RestAssured
+                    .given()
                     .port(port)
                     .body(parkingLot)
                     .contentType(JSON)
@@ -994,23 +1371,5 @@ class ParkingLotControllerTest {
             //THEN
             Assertions.assertThat(parkingLotRepository.findAll()).extracting(ParkingLot::getName).contains("name");
         }
-        @Test
-        @Sql("classpath:add_parking_lot.sql")
-        void getAllParkingLots() {
-            List<ParkingLotDto> actualparkingLots = newArrayList(given()
-                    .baseUri("http://localhost")
-                    .port(port)
-                    .when()
-                    .contentType(JSON)
-                    .get("/parking-lots")
-                    .then()
-                    .assertThat()
-                    .statusCode(HttpStatus.OK.value())
-                    .extract().as(ParkingLotDto[].class));
-
-            Assertions.assertThat(actualparkingLots).extracting(ParkingLotDto::getName).contains("Astridplein");
-            Assertions.assertThat(actualparkingLots).extracting(ParkingLotDto::getContactPersonEmail).contains("rinaldo@shark.com");
-        }
-
     }
 }

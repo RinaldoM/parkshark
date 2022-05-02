@@ -1,10 +1,12 @@
 package com.switchfully.sharkitects.parking_lot;
 
-import com.switchfully.sharkitects.infrastructure.EmptyInputException;
+import com.switchfully.sharkitects.infrastructure.exceptions.EmptyInputException;
 import com.switchfully.sharkitects.infrastructure.Infrastructure;
-import com.switchfully.sharkitects.infrastructure.InvalidNumberException;
+import com.switchfully.sharkitects.infrastructure.exceptions.InvalidEmailFormatException;
+import com.switchfully.sharkitects.infrastructure.exceptions.InvalidNumberException;
 import com.switchfully.sharkitects.parking_lot.dto.CreateParkingLotDto;
-import com.switchfully.sharkitects.parking_lot.dto.ParkingLotMapper;
+import com.switchfully.sharkitects.parking_lot.dto.ParkingLotDto;
+import com.switchfully.sharkitects.parking_lot.exceptions.ParkingLotAlreadyExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,13 @@ public class ParkingLotService {
         return createParkingLotDto;
     }
 
+    private boolean parkingLotWithSameNameAlreadyExists(CreateParkingLotDto createParkingLotDto) {
+        List<ParkingLot> parkingLotsWithSameName = parkingLotRepository.findByName(createParkingLotDto.getName()).stream()
+                .filter(parkingLot -> parkingLot.getName().equals(createParkingLotDto.getName()))
+                .toList();
+        return parkingLotsWithSameName.size() > 0;
+    }
+
     private void checkEachInputField(CreateParkingLotDto createParkingLotDto) {
         Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getName()), new EmptyInputException("parking name"));
         Infrastructure.inputValidation(Infrastructure.isLessOrEqualTo0(createParkingLotDto.getMaxCapacity()), new InvalidNumberException("max capacity"));
@@ -46,10 +55,11 @@ public class ParkingLotService {
         Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getFirstName()), new EmptyInputException("first name"));
         Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getLastName()), new EmptyInputException("last name"));
         Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(createParkingLotDto.getContactPerson().getEmail()), new EmptyInputException("email address"));
+        Infrastructure.inputValidation(Infrastructure.isEmailFormatIncorrect(createParkingLotDto.getContactPerson().getEmail()), new InvalidEmailFormatException());
 
         Infrastructure.inputValidation(checkIfNoPhoneNumberProvided(createParkingLotDto), new EmptyInputException("mobile phone number and telephone number"));
 
-
+        Infrastructure.inputValidation((parkingLotWithSameNameAlreadyExists(createParkingLotDto)), new ParkingLotAlreadyExistsException());
     }
 
     private boolean checkIfNoPhoneNumberProvided(CreateParkingLotDto createParkingLotDto) {

@@ -1,5 +1,7 @@
 package com.switchfully.sharkitects.members;
 
+import com.switchfully.sharkitects.infrastructure.exceptions.EmptyInputException;
+import com.switchfully.sharkitects.infrastructure.exceptions.InvalidEmailFormatException;
 import com.switchfully.sharkitects.members.dtos.DisplayMemberDto;
 import com.switchfully.sharkitects.members.dtos.MemberDto;
 import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
@@ -118,8 +120,7 @@ class MemberControllerIntegrationTest {
         //THEN
         Assertions.assertThat(thrown)
                 .isInstanceOf(NameLicensePlateCombinationExistsException.class)
-                .hasMessage("A member with the same name and the same license plate already exists.");
-
+                .hasMessage("A member with the same name and the same license plate already exists");
     }
 
     @Nested
@@ -157,8 +158,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingFirstNameException.class)
-                        .hasMessage("No first name has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty first name");
             }
 
             @Test
@@ -190,8 +191,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingFirstNameException.class)
-                        .hasMessage("No first name has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty first name");
             }
 
             @Test
@@ -223,8 +224,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingFirstNameException.class)
-                        .hasMessage("No first name has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty first name");
             }
 
             @Test
@@ -256,8 +257,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingLastNameException.class)
-                        .hasMessage("No last name has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty last name");
             }
 
             @Test
@@ -289,8 +290,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingLastNameException.class)
-                        .hasMessage("No last name has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty last name");
             }
 
             @Test
@@ -322,8 +323,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingLastNameException.class)
-                        .hasMessage("No last name has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty last name");
             }
         }
         @Nested
@@ -358,8 +359,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingStreetNameException.class)
-                        .hasMessage("No street name has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty street name");
             }
 
             @Test
@@ -391,8 +392,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingStreetNameException.class)
-                        .hasMessage("No street name has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty street name");
             }
 
             @Test
@@ -424,8 +425,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingStreetNameException.class)
-                        .hasMessage("No street name has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty street name");
             }
 
             @Test
@@ -457,8 +458,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingStreetNumberException.class)
-                        .hasMessage("No street number has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty street number");
             }
 
             @Test
@@ -490,8 +491,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingStreetNumberException.class)
-                        .hasMessage("No street number has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty street number");
             }
 
             @Test
@@ -523,8 +524,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingStreetNumberException.class)
-                        .hasMessage("No street number has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty street number");
             }
 
             @Test
@@ -556,8 +557,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingZipCodeException.class)
-                        .hasMessage("No zip code has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty zip code");
             }
 
             @Test
@@ -589,8 +590,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingZipCodeException.class)
-                        .hasMessage("No zip code has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty zip code");
             }
 
             @Test
@@ -622,8 +623,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingZipCodeException.class)
-                        .hasMessage("No zip code has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty zip code");
             }
 
             @Test
@@ -655,8 +656,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingCityException.class)
-                        .hasMessage("No city has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty city");
             }
 
             @Test
@@ -688,8 +689,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingCityException.class)
-                        .hasMessage("No city has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty city");
             }
 
             @Test
@@ -721,8 +722,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingCityException.class)
-                        .hasMessage("No city has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty city");
             }
         }
         @Nested
@@ -757,8 +758,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingPhoneNumberException.class)
-                        .hasMessage("No phone number has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty phone number");
             }
 
             @Test
@@ -790,8 +791,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingPhoneNumberException.class)
-                        .hasMessage("No phone number has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty phone number");
             }
 
             @Test
@@ -823,8 +824,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingPhoneNumberException.class)
-                        .hasMessage("No phone number has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty phone number");
             }
         }
         @Nested
@@ -859,8 +860,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingEmailException.class)
-                        .hasMessage("No email address has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty email address");
             }
 
             @Test
@@ -892,8 +893,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingEmailException.class)
-                        .hasMessage("No email address has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty email address");
             }
 
             @Test
@@ -925,8 +926,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingEmailException.class)
-                        .hasMessage("No email address has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty email address");
             }
 
             @Test
@@ -959,7 +960,7 @@ class MemberControllerIntegrationTest {
                 //THEN
                 Assertions.assertThat(thrown)
                         .isInstanceOf(InvalidEmailFormatException.class)
-                        .hasMessage("An invalid email address format has been provided during member registration.");
+                        .hasMessage("An invalid email address format has been provided");
             }
 
             @Test
@@ -992,7 +993,7 @@ class MemberControllerIntegrationTest {
                 //THEN
                 Assertions.assertThat(thrown)
                         .isInstanceOf(InvalidEmailFormatException.class)
-                        .hasMessage("An invalid email address format has been provided during member registration.");
+                        .hasMessage("An invalid email address format has been provided");
             }
 
             @Test
@@ -1025,7 +1026,7 @@ class MemberControllerIntegrationTest {
                 //THEN
                 Assertions.assertThat(thrown)
                         .isInstanceOf(InvalidEmailFormatException.class)
-                        .hasMessage("An invalid email address format has been provided during member registration.");
+                        .hasMessage("An invalid email address format has been provided");
             }
 
             @Test
@@ -1058,7 +1059,7 @@ class MemberControllerIntegrationTest {
                 //THEN
                 Assertions.assertThat(thrown)
                         .isInstanceOf(InvalidEmailFormatException.class)
-                        .hasMessage("An invalid email address format has been provided during member registration.");
+                        .hasMessage("An invalid email address format has been provided");
             }
         }
         @Nested
@@ -1093,8 +1094,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingLicensePlateNumberException.class)
-                        .hasMessage("No license plate number has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty license plate number");
             }
 
             @Test
@@ -1126,8 +1127,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingLicensePlateNumberException.class)
-                        .hasMessage("No license plate number has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty license plate number");
             }
 
             @Test
@@ -1159,8 +1160,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingLicensePlateNumberException.class)
-                        .hasMessage("No license plate number has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty license plate number");
             }
 
             @Test
@@ -1192,8 +1193,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingLicensePlateIssuingCountryException.class)
-                        .hasMessage("No license plate issuing country has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty license plate issuing country");
             }
 
             @Test
@@ -1225,8 +1226,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingLicensePlateIssuingCountryException.class)
-                        .hasMessage("No license plate issuing country has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty license plate issuing country");
             }
 
             @Test
@@ -1258,8 +1259,8 @@ class MemberControllerIntegrationTest {
 
                 //THEN
                 Assertions.assertThat(thrown)
-                        .isInstanceOf(MissingLicensePlateIssuingCountryException.class)
-                        .hasMessage("No license plate issuing country has been provided during member registration.");
+                        .isInstanceOf(EmptyInputException.class)
+                        .hasMessage("Empty license plate issuing country");
             }
         }
     }

@@ -25,4 +25,8 @@ public class Infrastructure {
     public static boolean isLessOrEqualTo0(double doubleToCheck) {
         return doubleToCheck <= 0;
     }
+
+    public static boolean isEmailFormatIncorrect(String emailToCheck) {
+       return !emailToCheck.matches("^(\\S+)@(\\S+)\\.([a-zA-Z]+)$");
+    }
 }

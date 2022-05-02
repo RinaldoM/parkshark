@@ -1,4 +1,4 @@
-package com.switchfully.sharkitects.parking_lot;
+package com.switchfully.sharkitects.parking_lot.dto;
 
 public class ParkingLotDto {
 
@@ -17,6 +17,7 @@ public class ParkingLotDto {
         this.contactPersonTelephoneNumber = mobile;
         this.contactPersonMobilePhoneNumber = telephone;
     }
+
 
     public Long getId() {
         return id;

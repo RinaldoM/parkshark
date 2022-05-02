@@ -1,16 +1,18 @@
 package com.switchfully.sharkitects.members;
 
+import com.switchfully.sharkitects.infrastructure.Infrastructure;
+import com.switchfully.sharkitects.infrastructure.exceptions.EmptyInputException;
+import com.switchfully.sharkitects.infrastructure.exceptions.InvalidEmailFormatException;
 import com.switchfully.sharkitects.members.dtos.DisplayMemberDto;
 import com.switchfully.sharkitects.members.dtos.MemberDto;
 import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
-import com.switchfully.sharkitects.members.exceptions.*;
+import com.switchfully.sharkitects.members.exceptions.NameLicensePlateCombinationExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -47,32 +49,22 @@ public class MemberService {
     }
 
     private void checkEachInputField(RegisterMemberDto registerMemberDto) {
-        inputValidation(isNullEmptyOrBlank(registerMemberDto.getFirstName()), new MissingFirstNameException());
-        inputValidation(isNullEmptyOrBlank(registerMemberDto.getLastName()), new MissingLastNameException());
-        inputValidation(isNullEmptyOrBlank(registerMemberDto.getAddress().getStreetName()), new MissingStreetNameException());
-        inputValidation(isNullEmptyOrBlank(registerMemberDto.getAddress().getStreetNumber()), new MissingStreetNumberException());
-        inputValidation(isNullEmptyOrBlank(registerMemberDto.getAddress().getPostalCodeCity().getZipCode()), new MissingZipCodeException());
-        inputValidation(isNullEmptyOrBlank(registerMemberDto.getAddress().getPostalCodeCity().getCity()), new MissingCityException());
-        inputValidation(isNullEmptyOrBlank(registerMemberDto.getPhoneNumber()), new MissingPhoneNumberException());
-        inputValidation(isNullEmptyOrBlank(registerMemberDto.getEmail()), new MissingEmailException());
-        inputValidation(isNullEmptyOrBlank(registerMemberDto.getLicensePlate().getNumber()), new MissingLicensePlateNumberException());
-        inputValidation(isNullEmptyOrBlank(registerMemberDto.getLicensePlate().getIssuingCountry()), new MissingLicensePlateIssuingCountryException());
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(registerMemberDto.getFirstName()), new EmptyInputException("first name"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(registerMemberDto.getLastName()), new EmptyInputException("last name"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(registerMemberDto.getAddress().getStreetName()), new EmptyInputException("street name"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(registerMemberDto.getAddress().getStreetNumber()), new EmptyInputException("street number"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(registerMemberDto.getAddress().getPostalCodeCity().getZipCode()), new EmptyInputException("zip code"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(registerMemberDto.getAddress().getPostalCodeCity().getCity()), new EmptyInputException("city"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(registerMemberDto.getPhoneNumber()), new EmptyInputException("phone number"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(registerMemberDto.getEmail()), new EmptyInputException("email address"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(registerMemberDto.getLicensePlate().getNumber()), new EmptyInputException("license plate number"));
+        Infrastructure.inputValidation(Infrastructure.isNullEmptyOrBlank(registerMemberDto.getLicensePlate().getIssuingCountry()), new EmptyInputException("license plate issuing country"));
 
-        inputValidation(!registerMemberDto.getEmail().matches("^(\\S+)@(\\S+)\\.([a-zA-Z]+)$"), new InvalidEmailFormatException());
+        Infrastructure.inputValidation(Infrastructure.isEmailFormatIncorrect(registerMemberDto.getEmail()), new InvalidEmailFormatException());
 
-        inputValidation(memberWithSameNameAndPlateExists(registerMemberDto), new NameLicensePlateCombinationExistsException());
+        Infrastructure.inputValidation(memberWithSameNameAndPlateExists(registerMemberDto), new NameLicensePlateCombinationExistsException());
     }
 
-    private void inputValidation(boolean isInvalidInput, RuntimeException exception) {
-        if (isInvalidInput) {
-            logger.error(exception.getMessage());
-            throw exception;
-        }
-    }
-
-    private boolean isNullEmptyOrBlank(String stringToCheck) {
-        return stringToCheck == null || stringToCheck.isEmpty() || stringToCheck.isBlank();
-    }
 
     public List<DisplayMemberDto> getAllMembers() {
         logger.info("All members are displayed.");
