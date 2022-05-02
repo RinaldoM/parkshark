@@ -38,11 +38,9 @@ public class MemberService {
         checkEachInputField(registerMemberDto);
 
         Member memberToRegister = memberMapper.toMember(registerMemberDto);
-        if(registerMemberDto.getMembershipLevel() == null){
-            memberToRegister.setMembershipLevel(getByMembershipLevelName("bronze"));
-        }else{
-            memberToRegister.setMembershipLevel(getByMembershipLevelName(registerMemberDto.getMembershipLevel()));
-        }
+
+        memberToRegister.setMembershipLevel(getByMembershipLevelName(registerMemberDto.getMembershipLevel()));
+
 
         Member registeredMember = memberRepository.save(memberToRegister);
         logger.info("New member has been registered");
@@ -50,6 +48,9 @@ public class MemberService {
     }
 
     private MembershipLevel getByMembershipLevelName(String name) {
+        if(name == null){
+            name = "bronze";
+        }
         return membershipLevelRepository.findByMembershipLevelName(MembershipLevelName.getLevelName(name.toUpperCase()));
     }
 

@@ -29,7 +29,7 @@ import static org.assertj.core.util.Lists.newArrayList;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class MemberControllerIntegrationTest {
-
+    String membershipLevel = null;
     @LocalServerPort
     private int port;
 
@@ -48,8 +48,8 @@ class MemberControllerIntegrationTest {
                 new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                 "0474555999",
                 "baby.shark@music.bad",
-                new LicensePlate("SHRK123", "Belgium")
-        );
+                new LicensePlate("SHRK123", "Belgium"),
+                membershipLevel);
 
         //WHEN
         MemberDto actual = RestAssured
@@ -97,8 +97,8 @@ class MemberControllerIntegrationTest {
                 new Address("other place", "8", new PostalCodeCity("5000", "Namur")),
                 "01234",
                 "some@mail.com",
-                new LicensePlate("SHRK123", "Belgium")
-        );
+                new LicensePlate("SHRK123", "Belgium"),
+                membershipLevel);
 
 
         //WHEN
@@ -138,8 +138,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -171,8 +171,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -204,8 +204,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -237,8 +237,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -270,8 +270,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -303,8 +303,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -339,8 +339,8 @@ class MemberControllerIntegrationTest {
                         new Address(null, "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -372,8 +372,8 @@ class MemberControllerIntegrationTest {
                         new Address("", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -405,8 +405,8 @@ class MemberControllerIntegrationTest {
                         new Address("    ", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -438,8 +438,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", null, new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -471,8 +471,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -504,8 +504,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "   ", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -537,8 +537,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity(null, "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -570,8 +570,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -603,8 +603,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("  ", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -636,8 +636,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", null)),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -669,8 +669,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -702,8 +702,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "  ")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -738,8 +738,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         null,
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -771,8 +771,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -804,8 +804,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "  ",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -840,8 +840,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         null,
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -873,8 +873,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -906,8 +906,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "  ",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -939,8 +939,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "babysharkisadumdum",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -972,8 +972,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "babysharkisa.dumdum",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -1005,8 +1005,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "babysharkisa@dumdum",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -1038,8 +1038,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "babysharkisa@dum.d_um",
-                        new LicensePlate("SHRK123", "Belgium")
-                );
+                        new LicensePlate("SHRK123", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -1074,8 +1074,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate(null, "Belgium")
-                );
+                        new LicensePlate(null, "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -1107,8 +1107,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("", "Belgium")
-                );
+                        new LicensePlate("", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -1140,8 +1140,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("  ", "Belgium")
-                );
+                        new LicensePlate("  ", "Belgium"),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -1173,8 +1173,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", null)
-                );
+                        new LicensePlate("SHRK123", null),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -1206,8 +1206,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "")
-                );
+                        new LicensePlate("SHRK123", ""),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured
@@ -1239,8 +1239,8 @@ class MemberControllerIntegrationTest {
                         new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
                         "0474555999",
                         "baby.shark@music.bad",
-                        new LicensePlate("SHRK123", "  ")
-                );
+                        new LicensePlate("SHRK123", "  "),
+                        membershipLevel);
 
                 //WHEN
                 RestAssured

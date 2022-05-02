@@ -6,8 +6,7 @@ public enum MembershipLevelName {
 
     public static MembershipLevelName getLevelName(String level){
         switch (level){
-            case "BRONZE":
-                return BRONZE;
+
             case "SILVER":
                 return SILVER;
             case "GOLD":

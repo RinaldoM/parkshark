@@ -15,13 +15,14 @@ public class RegisterMemberDto {
     private final LocalDateTime registrationDate;
     private String membershipLevel;
 
-    public RegisterMemberDto(String firstName, String lastName, Address address, String phoneNumber, String email, LicensePlate licensePlate) {
+    public RegisterMemberDto(String firstName, String lastName, Address address, String phoneNumber, String email, LicensePlate licensePlate, String membershipLevel) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.licensePlate = licensePlate;
+        this.membershipLevel = membershipLevel;
         this.registrationDate = LocalDateTime.now();
     }
 
