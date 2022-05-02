@@ -3,17 +3,8 @@ package com.switchfully.sharkitects.parking_lot;
 import com.switchfully.sharkitects.infrastructure.EmptyInputException;
 import com.switchfully.sharkitects.infrastructure.InvalidNumberException;
 import com.switchfully.sharkitects.members.Address;
-import com.switchfully.sharkitects.members.LicensePlate;
 import com.switchfully.sharkitects.members.PostalCodeCity;
-import com.switchfully.sharkitects.members.dtos.DisplayMemberDto;
-import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
-import com.switchfully.sharkitects.members.exceptions.MissingCityException;
-import com.switchfully.sharkitects.members.exceptions.MissingStreetNameException;
-import com.switchfully.sharkitects.members.exceptions.MissingStreetNumberException;
-import com.switchfully.sharkitects.members.exceptions.MissingZipCodeException;
 import com.switchfully.sharkitects.parking_lot.dto.CreateParkingLotDto;
-import com.switchfully.sharkitects.parking_lot.dto.ParkingLotMapper;
-import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -42,9 +33,6 @@ class ParkingLotControllerTest {
     private ParkingLotRepository parkingLotRepository;
 
     @Autowired
-    private ParkingLotMapper parkingLotMapper;
-
-    @Autowired
     private ParkingLotService parkingLotService;
 
     @Test
@@ -58,8 +46,7 @@ class ParkingLotControllerTest {
                                 new PostalCodeCity("3600", "Genk"))),
                 10);
 
-        RestAssured
-                .given()
+        given()
                 .port(port)
                 .body(parkingLot)
                 .contentType(JSON)
@@ -91,8 +78,7 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -123,8 +109,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -155,8 +140,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -192,8 +176,7 @@ class ParkingLotControllerTest {
 
             //WHEN
 
-            RestAssured
-                    .given()
+            given()
                     .port(port)
                     .body(expected)
                     .contentType(JSON)
@@ -226,8 +209,7 @@ class ParkingLotControllerTest {
 
             //WHEN
 
-            RestAssured
-                    .given()
+            given()
                     .port(port)
                     .body(expected)
                     .contentType(JSON)
@@ -262,8 +244,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -294,8 +275,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -326,8 +306,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -358,8 +337,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -390,8 +368,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -422,8 +399,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -454,8 +430,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -486,8 +461,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -518,8 +492,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -550,8 +523,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -582,8 +554,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -614,8 +585,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -651,8 +621,7 @@ class ParkingLotControllerTest {
 
             //WHEN
 
-            RestAssured
-                    .given()
+            given()
                     .port(port)
                     .body(expected)
                     .contentType(JSON)
@@ -684,8 +653,7 @@ class ParkingLotControllerTest {
 
             //WHEN
 
-            RestAssured
-                    .given()
+            given()
                     .port(port)
                     .body(expected)
                     .contentType(JSON)
@@ -721,8 +689,7 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -753,8 +720,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -785,8 +751,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -818,8 +783,7 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -850,8 +814,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -882,8 +845,7 @@ class ParkingLotControllerTest {
                     10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -919,8 +881,7 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -952,8 +913,7 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -985,8 +945,7 @@ class ParkingLotControllerTest {
                             10);
 
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .body(expected)
                     .accept(JSON)
                     .contentType(JSON)
@@ -1021,8 +980,7 @@ class ParkingLotControllerTest {
                                     new PostalCodeCity("3600", "Genk"))),
                     10);
             //WHEN
-            RestAssured
-                    .given()
+            given()
                     .port(port)
                     .body(parkingLot)
                     .contentType(JSON)
