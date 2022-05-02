@@ -6,7 +6,6 @@ import com.switchfully.sharkitects.infrastructure.exceptions.InvalidEmailFormatE
 import com.switchfully.sharkitects.members.dtos.DisplayMemberDto;
 import com.switchfully.sharkitects.members.dtos.MemberDto;
 import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
-import com.switchfully.sharkitects.members.exceptions.MembershipLevelRepository;
 import com.switchfully.sharkitects.members.exceptions.NameLicensePlateCombinationExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,7 @@ public class MemberService {
     }
 
     private MembershipLevel getByMembershipLevelName(String name) {
-        return membershipLevelRepository.findByMembershipLevelName(name.toUpperCase());
+        return membershipLevelRepository.findByMembershipLevelName(MembershipLevelName.getLevelName(name.toUpperCase()));
     }
 
     private boolean memberWithSameNameAndPlateExists(RegisterMemberDto registerMemberDto) {

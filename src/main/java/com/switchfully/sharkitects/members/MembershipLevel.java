@@ -9,6 +9,7 @@ public class MembershipLevel {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "membership_level_seq")
     @SequenceGenerator(name = "membership_level_seq", sequenceName = "membership_level_seq", allocationSize = 1)
     private Long id;
+    @Enumerated(EnumType.STRING)
     @Column(name = "NAME")
     private MembershipLevelName membershipLevelName;
     @Column(name = "MONTHLY_COST")

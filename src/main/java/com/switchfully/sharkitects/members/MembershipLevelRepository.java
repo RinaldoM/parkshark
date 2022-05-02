@@ -1,4 +1,4 @@
-package com.switchfully.sharkitects.members.exceptions;
+package com.switchfully.sharkitects.members;
 
 import com.switchfully.sharkitects.members.MembershipLevel;
 import com.switchfully.sharkitects.members.MembershipLevelName;
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MembershipLevelRepository extends JpaRepository<MembershipLevel, Long> {
 
-    MembershipLevel findByMembershipLevelName(String name);
+    MembershipLevel findByMembershipLevelName(MembershipLevelName membershipLevelName);
 
 }
