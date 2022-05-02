@@ -13,6 +13,7 @@ public class RegisterMemberDto {
     private final String email;
     private final LicensePlate licensePlate;
     private final LocalDateTime registrationDate;
+    private String membershipLevel;
 
     public RegisterMemberDto(String firstName, String lastName, Address address, String phoneNumber, String email, LicensePlate licensePlate) {
         this.firstName = firstName;
@@ -50,5 +51,9 @@ public class RegisterMemberDto {
 
     public LocalDateTime getRegistrationDate() {
         return registrationDate;
+    }
+
+    public String getMembershipLevel() {
+        return membershipLevel;
     }
 }

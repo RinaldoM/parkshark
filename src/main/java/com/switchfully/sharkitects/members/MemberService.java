@@ -6,6 +6,7 @@ import com.switchfully.sharkitects.infrastructure.exceptions.InvalidEmailFormatE
 import com.switchfully.sharkitects.members.dtos.DisplayMemberDto;
 import com.switchfully.sharkitects.members.dtos.MemberDto;
 import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
+import com.switchfully.sharkitects.members.exceptions.MembershipLevelRepository;
 import com.switchfully.sharkitects.members.exceptions.NameLicensePlateCombinationExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @Transactional
@@ -21,12 +23,14 @@ public class MemberService {
 
     private final MemberMapper memberMapper;
     private final MemberRepository memberRepository;
+    private final MembershipLevelRepository membershipLevelRepository;
 
     private final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
-    public MemberService(MemberMapper memberMapper, MemberRepository memberRepository) {
+    public MemberService(MemberMapper memberMapper, MemberRepository memberRepository, MembershipLevelRepository membershipLevelRepository) {
         this.memberMapper = memberMapper;
         this.memberRepository = memberRepository;
+        this.membershipLevelRepository = membershipLevelRepository;
     }
 
     public MemberDto registerMember(RegisterMemberDto registerMemberDto) {
@@ -35,10 +39,19 @@ public class MemberService {
         checkEachInputField(registerMemberDto);
 
         Member memberToRegister = memberMapper.toMember(registerMemberDto);
+        if(registerMemberDto.getMembershipLevel() == null){
+            memberToRegister.setMembershipLevel(getByMembershipLevelName("bronze"));
+        }else{
+            memberToRegister.setMembershipLevel(getByMembershipLevelName(registerMemberDto.getMembershipLevel()));
+        }
+
         Member registeredMember = memberRepository.save(memberToRegister);
         logger.info("New member has been registered");
         return memberMapper.toDto(registeredMember);
+    }
 
+    private MembershipLevel getByMembershipLevelName(String name) {
+        return membershipLevelRepository.findByMembershipLevelName(name.toUpperCase());
     }
 
     private boolean memberWithSameNameAndPlateExists(RegisterMemberDto registerMemberDto) {
@@ -70,4 +83,6 @@ public class MemberService {
         logger.info("All members are displayed.");
         return memberMapper.toDisplayMemberDto(memberRepository.findAll());
     }
+
+
 }

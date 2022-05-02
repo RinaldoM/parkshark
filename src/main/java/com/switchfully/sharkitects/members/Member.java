@@ -27,6 +27,11 @@ public class Member {
     @Column(name = "REGISTRATION_DATE", columnDefinition = "TIMESTAMP")
     private LocalDateTime registrationDate;
 
+    @ManyToOne
+    @JoinColumn(name = "FK_MEMBERSHIP_LEVEL_ID")
+    private MembershipLevel membershipLevel;
+
+
     public Member(String firstName, String lastName, Address address, String phoneNumber, String email, LicensePlate licensePlate, LocalDateTime registrationDate) {
         this.id = UUID.randomUUID().toString();
         this.firstName = firstName;
@@ -38,8 +43,8 @@ public class Member {
         this.registrationDate = registrationDate;
     }
 
-    public Member() {
 
+    public Member() {
     }
 
     public String getId() {
@@ -72,5 +77,12 @@ public class Member {
 
     public LocalDateTime getRegistrationDate() {
         return registrationDate;
+    }
+    public MembershipLevel getMembershipLevel() {
+        return membershipLevel;
+    }
+
+    public void setMembershipLevel(MembershipLevel membershipLevel) {
+        this.membershipLevel = membershipLevel;
     }
 }

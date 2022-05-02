@@ -14,8 +14,9 @@ public class MemberDto {
     private String email;
     private LicensePlate licensePlate;
     private LocalDateTime registrationDate;
+    private String membershipLevelName;
 
-    public MemberDto(String id, String firstName, String lastName, Address address, String phoneNumber, String email, LicensePlate licensePlate, LocalDateTime registrationDate) {
+    public MemberDto(String id, String firstName, String lastName, Address address, String phoneNumber, String email, LicensePlate licensePlate, LocalDateTime registrationDate, String membershipLevelName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -24,6 +25,7 @@ public class MemberDto {
         this.email = email;
         this.licensePlate = licensePlate;
         this.registrationDate = registrationDate;
+        this.membershipLevelName = membershipLevelName;
     }
 
     public String getId() {
@@ -56,5 +58,9 @@ public class MemberDto {
 
     public LocalDateTime getRegistrationDate() {
         return registrationDate;
+    }
+
+    public String getMembershipLevelName() {
+        return membershipLevelName;
     }
 }

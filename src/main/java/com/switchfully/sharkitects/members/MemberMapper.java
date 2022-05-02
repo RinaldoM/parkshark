@@ -32,8 +32,8 @@ public class MemberMapper {
                 member.getPhoneNumber(),
                 member.getEmail(),
                 member.getLicensePlate(),
-                member.getRegistrationDate()
-        );
+                member.getRegistrationDate(),
+                member.getMembershipLevel().getMembershipLevelName().toString());
     }
 
     public DisplayMemberDto toDisplayMemberDto(Member member) {

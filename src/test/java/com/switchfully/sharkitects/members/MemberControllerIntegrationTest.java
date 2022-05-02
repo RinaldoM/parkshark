@@ -1281,4 +1281,7 @@ class MemberControllerIntegrationTest {
         Assertions.assertThat(actualMemberList).extracting(DisplayMemberDto::getFirstName).contains("Baby");
         Assertions.assertThat(actualMemberList).extracting(DisplayMemberDto::getEmail).contains("shark@baby.com");
     }
+
+
+
 }

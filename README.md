@@ -136,6 +136,7 @@ The functional requirements are written down as stories.
 These companies were never fully merged with ParkShark, they became divisions.
 - A division has a name, an original name (the original name of the bought company) and a director
 - Prioritization: Must-Have
+- estimation: 
 
 ### Story DI2: Get all Divisions
 **As a Manager I want to get an overview of all divisions.**
@@ -297,6 +298,7 @@ it should still be possible to not provide one. In that case, we'll automaticall
 It's okay if they only take effect after a new deploy to production.
 - There are multiple ways of implementing this...
 - Prioritization: Must-Have
+- estimation: 3
 
 ### Story PSA1: Start Allocating a Parking spot
 **As a Member I want to start allocating a Parking spot so that I can enter the parking lot and park my car.**
