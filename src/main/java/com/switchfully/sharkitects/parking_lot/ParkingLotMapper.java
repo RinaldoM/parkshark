@@ -1,7 +1,8 @@
-package com.switchfully.sharkitects.parking_lot.dto;
+package com.switchfully.sharkitects.parking_lot;
 
 import com.switchfully.sharkitects.parking_lot.ParkingLot;
-import com.switchfully.sharkitects.parking_lot.ParkingLotDto;
+import com.switchfully.sharkitects.parking_lot.dto.CreateParkingLotDto;
+import com.switchfully.sharkitects.parking_lot.dto.ParkingLotDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
