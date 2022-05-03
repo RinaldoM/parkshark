@@ -43,7 +43,8 @@ public class MemberMapper {
                 member.getPhoneNumber(),
                 member.getEmail(),
                 member.getLicensePlate().getNumber(),
-                member.getRegistrationDate().toString());
+                member.getRegistrationDate().toString(),
+                member.getMembershipLevel().getMembershipLevelName().toString());
     }
 
 

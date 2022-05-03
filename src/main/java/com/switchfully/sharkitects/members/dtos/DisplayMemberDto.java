@@ -10,8 +10,9 @@ public class DisplayMemberDto {
     private String email;
     private String licensePlate;
     private String registrationDate;
+    private String membershipLevelName;
 
-    public DisplayMemberDto(String id, String firstName, String lastName, String phoneNumber, String email, String licensePlate, String registrationDate) {
+    public DisplayMemberDto(String id, String firstName, String lastName, String phoneNumber, String email, String licensePlate, String registrationDate, String membershipLevelName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -19,6 +20,7 @@ public class DisplayMemberDto {
         this.email = email;
         this.licensePlate = licensePlate;
         this.registrationDate = registrationDate;
+        this.membershipLevelName = membershipLevelName;
     }
 
     public String getId() {
@@ -47,5 +49,9 @@ public class DisplayMemberDto {
 
     public String getRegistrationDate() {
         return registrationDate;
+    }
+
+    public String getMembershipLevelName() {
+        return membershipLevelName;
     }
 }
