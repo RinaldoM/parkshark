@@ -81,4 +81,15 @@ public class ParkingLotService {
         serviceLogger.info("All parking lots are displayed.");
         return parkingLotMapper.toParkingLotDto(parkingLotRepository.findAll());
     }
+
+    public ParkingLot findById(Integer parkingLotId) {
+        return parkingLotRepository.findById(parkingLotId).orElse(null);
+    }
+
+    public boolean noParkingLotWithThisIdExists(Integer parkingLotId) {
+        List<ParkingLot> parkingLotsWithSameId = parkingLotRepository.findById(parkingLotId).stream()
+                .filter(parkingLot -> parkingLot.getId().equals(parkingLotId))
+                .toList();
+        return parkingLotsWithSameId.size() != 1;
+    }
 }

@@ -2,14 +2,14 @@ package com.switchfully.sharkitects.parking_lot.dto;
 
 public class ParkingLotDto {
 
-    private final Long id;
+    private final Integer id;
     private final String name;
     private final int maxCapacity;
     private final String contactPersonEmail;
     private final String contactPersonTelephoneNumber;
     private final String contactPersonMobilePhoneNumber;
 
-    public ParkingLotDto(Long id, String name, int maxCapacity, String contactPersonEmail, String mobile, String telephone) {
+    public ParkingLotDto(Integer id, String name, int maxCapacity, String contactPersonEmail, String mobile, String telephone) {
         this.id = id;
         this.name = name;
         this.maxCapacity = maxCapacity;
@@ -19,7 +19,7 @@ public class ParkingLotDto {
     }
 
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
