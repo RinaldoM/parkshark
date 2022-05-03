@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 
 public class StartAllocatingParkingSpotDto {
     private final String memberId;
-    private final String licensePlate;
+    private final String licensePlateNumber;
     private final Integer parkingLotId;
     private final LocalDateTime allocationStartDateTime;
 
     public StartAllocatingParkingSpotDto(String memberId, String licensePlate, Integer parkingLotId) {
         this.memberId = memberId;
-        this.licensePlate = licensePlate;
+        this.licensePlateNumber = licensePlate;
         this.parkingLotId = parkingLotId;
         this.allocationStartDateTime = LocalDateTime.now();
     }
@@ -19,8 +19,8 @@ public class StartAllocatingParkingSpotDto {
         return memberId;
     }
 
-    public String getLicensePlate() {
-        return licensePlate;
+    public String getLicensePlateNumber() {
+        return licensePlateNumber;
     }
 
     public Integer getParkingLotId() {

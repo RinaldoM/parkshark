@@ -1,5 +1,6 @@
 package com.switchfully.sharkitects.parking_lot;
 
+import com.switchfully.sharkitects.allocations.dtos.StartAllocatingParkingSpotDto;
 import com.switchfully.sharkitects.infrastructure.exceptions.EmptyInputException;
 import com.switchfully.sharkitects.infrastructure.Infrastructure;
 import com.switchfully.sharkitects.infrastructure.exceptions.InvalidEmailFormatException;
@@ -82,14 +83,12 @@ public class ParkingLotService {
         return parkingLotMapper.toParkingLotDto(parkingLotRepository.findAll());
     }
 
-    public ParkingLot findById(Integer parkingLotId) {
-        return parkingLotRepository.findById(parkingLotId).orElse(null);
+    public boolean noParkingLotWithThisIdExists(Integer parkingLotId) {
+        return parkingLotRepository.findById(parkingLotId).isEmpty();
     }
 
-    public boolean noParkingLotWithThisIdExists(Integer parkingLotId) {
-        List<ParkingLot> parkingLotsWithSameId = parkingLotRepository.findById(parkingLotId).stream()
-                .filter(parkingLot -> parkingLot.getId().equals(parkingLotId))
-                .toList();
-        return parkingLotsWithSameId.size() != 1;
+    public boolean isParkingLotFull(StartAllocatingParkingSpotDto startAllocatingParkingSpotDto) {
+        ParkingLot parkingLot = parkingLotRepository.findById(startAllocatingParkingSpotDto.getParkingLotId()).get();
+        return parkingLot.getNumberOfAllocatedSpots() >= parkingLot.getMaxCapacity();
     }
 }
