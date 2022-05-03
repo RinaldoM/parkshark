@@ -31,7 +31,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/members*");
+        web.ignoring().
+                antMatchers("/members*")
+                .antMatchers("/allocations");
     }
 
     private JwtAuthenticationConverter jwtAuthenticationConverter() {

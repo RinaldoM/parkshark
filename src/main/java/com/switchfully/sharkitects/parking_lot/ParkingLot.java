@@ -11,7 +11,7 @@ public class ParkingLot {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "parking_lot_seq")
     @SequenceGenerator(name = "parking_lot_seq", sequenceName = "parking_lot_seq", allocationSize = 1)
-    private Long id;
+    private Integer id;
     @Column (name = "NAME")
     private String name;
     @Enumerated(EnumType.STRING)
@@ -40,7 +40,7 @@ public class ParkingLot {
 
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

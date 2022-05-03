@@ -84,5 +84,14 @@ public class MemberService {
         return memberMapper.toDisplayMemberDto(memberRepository.findAll());
     }
 
+    public Member findById(String memberId) {
+        return memberRepository.findById(memberId).stream().findAny().orElse(null);
+    }
 
+    public boolean noMemberWithThisIdExists(String memberId) {
+        List<Member> memberWithSameId = memberRepository.findById(memberId).stream()
+                .filter(member -> member.getId().equalsIgnoreCase(memberId))
+                .toList();
+        return memberWithSameId.size() != 1;
+    }
 }

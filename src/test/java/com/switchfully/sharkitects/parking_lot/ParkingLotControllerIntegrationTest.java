@@ -28,7 +28,7 @@ import static org.assertj.core.util.Lists.newArrayList;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class ParkingLotControllerTest {
+class ParkingLotControllerIntegrationTest {
 
     @LocalServerPort
     private int port;
