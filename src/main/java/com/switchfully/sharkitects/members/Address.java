@@ -35,6 +35,10 @@ public class Address {
         return postalCodeCity;
     }
 
+    public void setPostalCodeCity(PostalCodeCity postalCodeCity) {
+        this.postalCodeCity = postalCodeCity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

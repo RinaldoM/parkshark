@@ -13,34 +13,37 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Locale;
 
 @Service
 @Transactional
 public class MemberService {
 
 
+    public static final String DEFAULT_MEMBERSHIP_LEVEL = "bronze";
     private final MemberMapper memberMapper;
     private final MemberRepository memberRepository;
     private final MembershipLevelRepository membershipLevelRepository;
+    private final PostalCodeCityService postalCodeCityService;
 
     private final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
-    public MemberService(MemberMapper memberMapper, MemberRepository memberRepository, MembershipLevelRepository membershipLevelRepository) {
+    public MemberService(MemberMapper memberMapper, MemberRepository memberRepository, MembershipLevelRepository membershipLevelRepository, PostalCodeCityService postalCodeCityService) {
         this.memberMapper = memberMapper;
         this.memberRepository = memberRepository;
         this.membershipLevelRepository = membershipLevelRepository;
+        this.postalCodeCityService = postalCodeCityService;
     }
 
     public MemberDto registerMember(RegisterMemberDto registerMemberDto) {
         logger.info("Attempting to register a new member");
-
         checkEachInputField(registerMemberDto);
-
         Member memberToRegister = memberMapper.toMember(registerMemberDto);
-
         memberToRegister.setMembershipLevel(getByMembershipLevelName(registerMemberDto.getMembershipLevel()));
 
+        if(postalCodeCityService.checkIfPostalCodeCityAlreadyExists(registerMemberDto.getAddress().getPostalCodeCity())){
+            PostalCodeCity byZipcode = postalCodeCityService.getByZipcode(registerMemberDto.getAddress().getPostalCodeCity().getZipCode());
+            memberToRegister.getAddress().setPostalCodeCity(byZipcode);
+        }
 
         Member registeredMember = memberRepository.save(memberToRegister);
         logger.info("New member has been registered");
@@ -49,7 +52,7 @@ public class MemberService {
 
     private MembershipLevel getByMembershipLevelName(String name) {
         if(name == null){
-            name = "bronze";
+            name = DEFAULT_MEMBERSHIP_LEVEL;
         }
         return membershipLevelRepository.findByMembershipLevelName(MembershipLevelName.getLevelName(name.toUpperCase()));
     }

@@ -4,7 +4,10 @@ import com.switchfully.sharkitects.infrastructure.exceptions.EmptyInputException
 import com.switchfully.sharkitects.infrastructure.exceptions.InvalidEmailFormatException;
 import com.switchfully.sharkitects.infrastructure.exceptions.InvalidNumberException;
 import com.switchfully.sharkitects.members.Address;
+import com.switchfully.sharkitects.members.LicensePlate;
 import com.switchfully.sharkitects.members.PostalCodeCity;
+import com.switchfully.sharkitects.members.dtos.MemberDto;
+import com.switchfully.sharkitects.members.dtos.RegisterMemberDto;
 import com.switchfully.sharkitects.parking_lot.dto.CreateParkingLotDto;
 import com.switchfully.sharkitects.parking_lot.dto.ParkingLotDto;
 import com.switchfully.sharkitects.parking_lot.exceptions.ParkingLotAlreadyExistsException;
@@ -1372,4 +1375,47 @@ class ParkingLotControllerTest {
             Assertions.assertThat(parkingLotRepository.findAll()).extracting(ParkingLot::getName).contains("name");
         }
     }
+
+    @Test
+    void givenPostalCityCodeThatAlreadyExists_whenRegisterMember_thenMemberRegisteredWithExistingPostalCodeCity() {
+        //GIVEN
+        CreateParkingLotDto expected = new CreateParkingLotDto("name", Category.ABOVE_GROUND_BUILDING, 5,
+                new Address("Stefaniestraat", "1B",
+                        new PostalCodeCity("9000", "Gent")),
+                new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                        new Address("Stefaniestraat", "1B",
+                                new PostalCodeCity("1000", "Brussels"))),
+                10);
+        CreateParkingLotDto testParkingLot = new CreateParkingLotDto("otherName", Category.ABOVE_GROUND_BUILDING, 5,
+                new Address("Bakerstraat", "1",
+                        new PostalCodeCity("9000", "Gent")),
+                new ContactPerson("Stefanie", "Vloemans", "04893543135", "60564035", "stefanie@mail.com",
+                        new Address("Stefaniestraat", "1B",
+                                new PostalCodeCity("3660", "Oudsbergen"))),
+                10);
+
+        parkingLotService.createParkingLot(testParkingLot);
+
+
+        //WHEN
+        CreateParkingLotDto actual = RestAssured
+                .given()
+                .body(expected)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/parking-lots")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .as(CreateParkingLotDto.class);
+        //THEN
+        Assertions.assertThat(actual.getAddress().getPostalCodeCity().getId()).isEqualTo((testParkingLot.getAddress().getPostalCodeCity().getId()));
+
+    }
+
+
+
 }

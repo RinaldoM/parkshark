@@ -1262,6 +1262,8 @@ class MemberControllerIntegrationTest {
                         .isInstanceOf(EmptyInputException.class)
                         .hasMessage("Empty license plate issuing country");
             }
+
+
         }
     }
     @Test
@@ -1280,6 +1282,86 @@ class MemberControllerIntegrationTest {
 
         Assertions.assertThat(actualMemberList).extracting(DisplayMemberDto::getFirstName).contains("Baby");
         Assertions.assertThat(actualMemberList).extracting(DisplayMemberDto::getEmail).contains("shark@baby.com");
+    }
+    @Test
+    void givenPostalCityCodeThatAlreadyExists_whenRegisterMember_thenMemberRegisteredWithExistingPostalCodeCity() {
+        //GIVEN
+        RegisterMemberDto expected = new RegisterMemberDto(
+                "Baby",
+                "Shark",
+                new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
+                "0474555999",
+                "baby.shark@music.bad",
+                new LicensePlate("SHRK123", "Belgium"),
+                membershipLevel);
+        RegisterMemberDto testMember = new RegisterMemberDto(
+                "Daddy",
+                "Shark",
+                new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
+                "0474555999",
+                "baby.shark@music.bad",
+                new LicensePlate("GSG123", "Belgium"),
+                membershipLevel);
+        MemberDto testMemberDto = memberService.registerMember(testMember);
+
+        //WHEN
+        MemberDto actual = RestAssured
+                .given()
+                .body(expected)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/members")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .as(MemberDto.class);
+
+        //THEN
+        Assertions.assertThat(actual.getAddress().getPostalCodeCity().getId()).isEqualTo((testMemberDto.getAddress().getPostalCodeCity().getId()));
+
+    }
+    @Test
+    void givenPostalCityCodeThatDoesNotExists_whenRegisterMember_thenMemberRegisteredWithNewPostalCodeCity() {
+        //GIVEN
+        RegisterMemberDto expected = new RegisterMemberDto(
+                "Baby",
+                "Shark",
+                new Address("Annoying music st.", "6", new PostalCodeCity("1000", "Brussels")),
+                "0474555999",
+                "baby.shark@music.bad",
+                new LicensePlate("SHRK123", "Belgium"),
+                membershipLevel);
+        RegisterMemberDto testMember = new RegisterMemberDto(
+                "Daddy",
+                "Shark",
+                new Address("Annoying music st.", "6", new PostalCodeCity("3600", "Genk")),
+                "0474555999",
+                "baby.shark@music.bad",
+                new LicensePlate("GSG123", "Belgium"),
+                membershipLevel);
+        MemberDto testMemberDto = memberService.registerMember(testMember);
+
+        //WHEN
+        MemberDto actual = RestAssured
+                .given()
+                .body(expected)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/members")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .as(MemberDto.class);
+
+        //THEN
+        Assertions.assertThat(actual.getAddress().getPostalCodeCity().getId()).isNotEqualTo((testMemberDto.getAddress().getPostalCodeCity().getId()));
+
     }
 
 

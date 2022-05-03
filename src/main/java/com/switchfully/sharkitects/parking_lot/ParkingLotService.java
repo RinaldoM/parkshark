@@ -4,6 +4,8 @@ import com.switchfully.sharkitects.infrastructure.exceptions.EmptyInputException
 import com.switchfully.sharkitects.infrastructure.Infrastructure;
 import com.switchfully.sharkitects.infrastructure.exceptions.InvalidEmailFormatException;
 import com.switchfully.sharkitects.infrastructure.exceptions.InvalidNumberException;
+import com.switchfully.sharkitects.members.PostalCodeCity;
+import com.switchfully.sharkitects.members.PostalCodeCityService;
 import com.switchfully.sharkitects.parking_lot.dto.CreateParkingLotDto;
 import com.switchfully.sharkitects.parking_lot.dto.ParkingLotDto;
 import com.switchfully.sharkitects.parking_lot.exceptions.ParkingLotAlreadyExistsException;
@@ -19,20 +21,28 @@ public class ParkingLotService {
 
     private final ParkingLotMapper parkingLotMapper;
     private final ParkingLotRepository parkingLotRepository;
+    private final PostalCodeCityService postalCodeCityService;
     private final Logger serviceLogger = LoggerFactory.getLogger(ParkingLotService.class);
 
 
-    public ParkingLotService(ParkingLotMapper parkingLotMapper, ParkingLotRepository parkingLotRepository) {
+    public ParkingLotService(ParkingLotMapper parkingLotMapper, ParkingLotRepository parkingLotRepository, PostalCodeCityService postalCodeCityService) {
         this.parkingLotMapper = parkingLotMapper;
         this.parkingLotRepository = parkingLotRepository;
+        this.postalCodeCityService = postalCodeCityService;
     }
 
     public CreateParkingLotDto createParkingLot(CreateParkingLotDto createParkingLotDto) {
         serviceLogger.info("Attempting to create a new parking lot");
         checkEachInputField(createParkingLotDto);
 
-        parkingLotRepository.save(parkingLotMapper.toParkingLot(createParkingLotDto));
-        serviceLogger.info("parking lot created");
+        ParkingLot parkingLot = parkingLotMapper.toParkingLot(createParkingLotDto);
+        if(postalCodeCityService.checkIfPostalCodeCityAlreadyExists(createParkingLotDto.getAddress().getPostalCodeCity())){
+            PostalCodeCity byZipcode = postalCodeCityService.getByZipcode(createParkingLotDto.getAddress().getPostalCodeCity().getZipCode());
+            parkingLot.getAddress().setPostalCodeCity(byZipcode);
+        }
+
+        parkingLotRepository.save(parkingLot);
+        serviceLogger.info("Parking lot created");
         return createParkingLotDto;
     }
 

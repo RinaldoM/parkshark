@@ -11,7 +11,6 @@ public class PostalCodeCity {
     @SequenceGenerator(name = "postalcode_city_seq", sequenceName = "postalcode_city_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "postalcode_city_seq")
     private Long id;
-
     @Column(name = "ZIPCODE")
     private String zipCode;
     @Column(name = "CITY")
@@ -23,7 +22,10 @@ public class PostalCodeCity {
     }
 
     public PostalCodeCity() {
+    }
 
+    public Long getId() {
+        return id;
     }
 
     public String getZipCode() {
