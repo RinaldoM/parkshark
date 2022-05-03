@@ -14,8 +14,8 @@ public class ParkingLotDto {
         this.name = name;
         this.maxCapacity = maxCapacity;
         this.contactPersonEmail = contactPersonEmail;
-        this.contactPersonTelephoneNumber = mobile;
-        this.contactPersonMobilePhoneNumber = telephone;
+        this.contactPersonTelephoneNumber = telephone;
+        this.contactPersonMobilePhoneNumber = mobile;
     }
 
 

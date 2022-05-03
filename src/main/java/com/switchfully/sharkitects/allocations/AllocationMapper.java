@@ -9,9 +9,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AllocationMapper {
     public Allocation toAllocation(StartAllocatingParkingSpotDto startAllocatingParkingSpotDto, Member member, ParkingLot parkingLot) {
-
         return new Allocation(member,
-                startAllocatingParkingSpotDto.getLicensePlate(),
+                startAllocatingParkingSpotDto.getLicensePlateNumber(),
                 parkingLot,
                 startAllocatingParkingSpotDto.getAllocationStartDateTime());
 

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,8 +38,11 @@ public class MemberService {
 
     public MemberDto registerMember(RegisterMemberDto registerMemberDto) {
         logger.info("Attempting to register a new member");
+
         checkEachInputField(registerMemberDto);
+
         Member memberToRegister = memberMapper.toMember(registerMemberDto);
+
         memberToRegister.setMembershipLevel(getByMembershipLevelName(registerMemberDto.getMembershipLevel()));
 
         if(postalCodeCityService.checkIfPostalCodeCityAlreadyExists(registerMemberDto.getAddress().getPostalCodeCity())){
@@ -87,14 +92,16 @@ public class MemberService {
         return memberMapper.toDisplayMemberDto(memberRepository.findAll());
     }
 
-    public Member findById(String memberId) {
-        return memberRepository.findById(memberId).stream().findAny().orElse(null);
-    }
 
     public boolean noMemberWithThisIdExists(String memberId) {
-        List<Member> memberWithSameId = memberRepository.findById(memberId).stream()
-                .filter(member -> member.getId().equalsIgnoreCase(memberId))
-                .toList();
-        return memberWithSameId.size() != 1;
+        return memberRepository.findById(memberId).isEmpty();
+    }
+
+    public boolean licensePlateNotLinkedToMember(String memberId, String licensePlateNumber) {
+        Member member = memberRepository.findById(memberId).get();
+        if (!member.getMembershipLevel().getMembershipLevelName().equals(MembershipLevelName.GOLD)) {
+            return !member.getLicensePlate().getNumber().equals(licensePlateNumber);
+        }
+        return false;
     }
 }
